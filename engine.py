@@ -22,13 +22,19 @@ class Player(object):
 
         self.gravity = -500
 
+        self.allowPress = True
+
         self.key_handler = key.KeyStateHandler()
 
     def update(self, dt):
-        self.dy += self.gravity * dt
+        ##Changed to make the movement less 'elastic' and instead more responsive
+        #self.dy += self.gravity * dt
 
-        self.sprite.y += self.dy * dt
+        #self.sprite.y += self.dy * dt
+        self.sprite.y += self.gravity * dt
         self.sprite.x += self.dx * dt
+
+        self.dy = self.gravity
 
         if self.sprite.y - self.halfHeight < 0:
             self.sprite.y = 0 + self.halfHeight
@@ -38,5 +44,9 @@ class Player(object):
             self.sprite.y = self.windowSize.height - self.halfHeight
             self.dy = 0
 
-        if self.key_handler[key.SPACE]:
+        if self.key_handler[key.SPACE] and self.allowPress:
             self.gravity = -self.gravity
+            self.allowPress = False
+
+        elif not self.key_handler[key.SPACE] and not self.allowPress:
+            self.allowPress = True
