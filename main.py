@@ -1,5 +1,6 @@
 import pyglet
 import engine
+import simpleLibrary
 
 
 def centreImage(image):
@@ -8,7 +9,7 @@ def centreImage(image):
 
 window = pyglet.window.Window(1300, 600)
 
-playerImage = pyglet.image.load("playerImage.png")
+playerImage = pyglet.image.load("resources" + simpleLibrary.SEPARATOR + "playerImage.png")
 centreImage(playerImage)
 
 batch1 = pyglet.graphics.Batch()
@@ -22,7 +23,10 @@ def on_draw():
     window.clear()
     batch1.draw()
 
+
 def update(dt):
     player1.update(dt)
 
+
+pyglet.clock.schedule_interval(update, 1.0 / 120.0)
 pyglet.app.run()

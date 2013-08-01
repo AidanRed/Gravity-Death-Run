@@ -20,7 +20,7 @@ class Player(object):
         self.dx = 0
         self.dy = 0
 
-        self.gravity = -100
+        self.gravity = -500
 
         self.key_handler = key.KeyStateHandler()
 
@@ -30,11 +30,13 @@ class Player(object):
         self.sprite.y += self.dy * dt
         self.sprite.x += self.dx * dt
 
-        if self.y - self.halfHeight < 0:
-            self.y = 0 + self.halfHeight
+        if self.sprite.y - self.halfHeight < 0:
+            self.sprite.y = 0 + self.halfHeight
+            self.dy = 0
 
-        elif self.y + self.halfHeight > self.windowSize.height:
-            self.y = self.windowSize.height - self.halfHeight
+        elif self.sprite.y + self.halfHeight > self.windowSize.height:
+            self.sprite.y = self.windowSize.height - self.halfHeight
+            self.dy = 0
 
         if self.key_handler[key.SPACE]:
             self.gravity = -self.gravity
