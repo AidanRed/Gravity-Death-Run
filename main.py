@@ -14,9 +14,10 @@ centreImage(playerImage)
 
 batch1 = pyglet.graphics.Batch()
 
-player1 = engine.Player(window.width/2, window.height/2, playerImage, batch1, engine.Size(window.width, window.height))
+player1 = engine.Player(window.width / 5, window.height / 2, playerImage, batch1, engine.Size(window.width, window.height))
 
 window.push_handlers(player1.key_handler)
+
 
 @window.event
 def on_draw():

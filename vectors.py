@@ -429,5 +429,3 @@ def testProjection():
 
     print "x: " + str(theProjection.x)
     print "y: " + str(theProjection.y)
-
-testProjection()
