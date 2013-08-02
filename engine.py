@@ -1,5 +1,12 @@
+"""
+TODO:
+ - Change the players position so that they are closer to the left-hand side of the screen, so that they can better
+   see incoming obstacles.
+"""
+
 from pyglet.window import key
 from pyglet.sprite import Sprite
+from vectors import Vector2
 
 
 class Size(object):
@@ -50,3 +57,20 @@ class Player(object):
 
         elif not self.key_handler[key.SPACE] and not self.allowPress:
             self.allowPress = True
+
+
+class TileMap(object):
+    def __init__(self, windowSize):
+        #The keys for the dictionary is the column number that you want to access.
+        self.data = {}
+        self.windowSize = windowSize
+
+        self.leftColumnOffset = 0
+        self.rightColumnOffset = 0
+
+        self.bottomLeft = Vector2(0, 0)
+
+        self.scrollSpeed = 500
+
+    def update(self, dt):
+        self.bottomLeft.x += self.scrollSpeed
