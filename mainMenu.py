@@ -22,33 +22,33 @@ class Square:
 
     def drawSelf(self):
         pyglet.graphics.draw(4, GL_QUADS, ('v2i', (
-        self.x, self.y + self.height, self.x + self.width, self.y + self.height, self.x + self.width, self.y, self.x,
-        self.y)), ('c3B', (self.colour[0], self.colour[1], self.colour[2],
-                           self.colour[0], self.colour[1], self.colour[2],
-                           self.colour[0], self.colour[1], self.colour[2],
-                           self.colour[0], self.colour[1], self.colour[2],)))
+            self.x, self.y + self.height, self.x + self.width, self.y + self.height, self.x + self.width, self.y,
+            self.x, self.y)), ('c3B', (self.colour[0], self.colour[1], self.colour[2],
+                               self.colour[0], self.colour[1], self.colour[2],
+                               self.colour[0], self.colour[1], self.colour[2],
+                               self.colour[0], self.colour[1], self.colour[2],)))
 
 
 #Create the squares and set them to a grid constrained to the screen size.
 squares = []
-for i in range(windowWidth/squareSize):
-    for ii in range(windowHeight/squareSize):
-		squares.append(Square(i*squareSize, ii*squareSize, squareSize, squareSize, (56, 57, 58)))
-		
+for i in range(windowWidth / squareSize):
+    for ii in range(windowHeight / squareSize):
+        squares.append(Square(i * squareSize, ii * squareSize, squareSize, squareSize, (56, 57, 58)))
+
 #This method of setting colours for columns may be deemed inefficient and may not be used.
 #Choose the colours from a list of colours. 
 
-lblue = (51,255,255)
-blue = (0,0,255)
-dblue = (0,0,102)
-red = (255,0,0)
-pink = (255,51,153)
-purple = (153,51,255)
-lgreen = (204,255,0)
-green = (51,255,0)
-dgreen = (0,102,0)
-yellow = (255,255,255)
-orange = (153,255,51)
+lblue = (51, 255, 255)
+blue = (0, 0, 255)
+dblue = (0, 0, 102)
+red = (255, 0, 0)
+pink = (255, 51, 153)
+purple = (153, 51, 255)
+lgreen = (204, 255, 0)
+green = (51, 255, 0)
+dgreen = (0, 102, 0)
+yellow = (255, 255, 255)
+orange = (153, 255, 51)
 
 colours = []
 colours.append(lblue)
@@ -64,18 +64,14 @@ colours.append(yellow)
 colours.append(orange)
 
 possibleColours = []
-for i in range(windowWidth/squareSize):
-	possibleColours.append(colours[random.randint(0,10)])
-	print i
+for i in range(windowWidth / squareSize):
+    possibleColours.append(colours[random.randint(0, 10)])
+    print i
 
-for i in range(windowWidth/squareSize):
-	for ii in squares:
-		if i*squareSize == ii.x:
-			ii.colour = possibleColours[i]
-			
-	
-
-
+for i in range(windowWidth / squareSize):
+    for ii in squares:
+        if i * squareSize == ii.x:
+            ii.colour = possibleColours[i]
 
 
 @gameWindow.event

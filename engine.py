@@ -1,6 +1,6 @@
 """
 TODO:
- - Change the players position so that they are closer to the left-hand side of the screen, so that they can better
+ + Change the players position so that they are closer to the left-hand side of the screen, so that they can better
    see incoming obstacles.
 """
 from pyglet.window import key
