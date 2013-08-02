@@ -23,10 +23,10 @@ class Square:
     def drawSelf(self):
         pyglet.graphics.draw(4, GL_QUADS, ('v2i', (
             self.x, self.y + self.height, self.x + self.width, self.y + self.height, self.x + self.width, self.y,
-            self.x, self.y)), ('c3B', (self.colour[0], self.colour[1], self.colour[2],
-                               self.colour[0], self.colour[1], self.colour[2],
-                               self.colour[0], self.colour[1], self.colour[2],
-                               self.colour[0], self.colour[1], self.colour[2],)))
+            self.x, self.y)), ('c3B', (int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                               int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                               int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                               int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),)))
 
 
 #Create the squares and set them to a grid constrained to the screen size.
@@ -38,17 +38,17 @@ for i in range(windowWidth / squareSize):
 #This method of setting colours for columns may be deemed inefficient and may not be used.
 #Choose the colours from a list of colours. 
 
-lblue = (51, 255, 255)
-blue = (0, 0, 255)
-dblue = (0, 0, 102)
-red = (255, 0, 0)
-pink = (255, 51, 153)
-purple = (153, 51, 255)
-lgreen = (204, 255, 0)
-green = (51, 255, 0)
-dgreen = (0, 102, 0)
-yellow = (255, 255, 255)
-orange = (153, 255, 51)
+lblue = [51, 255, 255]
+blue = [0, 0, 255]
+dblue = [0, 0, 102]
+red = [255, 0, 0]
+pink = [255, 51, 153]
+purple = [153, 51, 255]
+lgreen = [204, 255, 0]
+green = [51, 255, 0]
+dgreen = [0, 102, 0]
+yellow = [255, 255, 255]
+orange = [153, 255, 51]
 
 colours = []
 colours.append(lblue)
@@ -82,7 +82,11 @@ def on_draw():
 
 
 def update(dt):
-    pass
+    for i in squares:
+        i.colour[0]+=0.1
+        i.colour[1]+=0.1
+        i.colour[2]+=0.1
+
 
 
 pyglet.clock.schedule_interval(update, 1.0 / 120.0)
