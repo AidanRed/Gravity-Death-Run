@@ -1,0 +1,11 @@
+Add different types of guns.
+ - flamethrower
+ - rocket launcher (can destroy terrain, gravity acts as 'guidance' system)
+ - machine gun
+ - laser rifle (gravity does not affect it)
+ - cannon (slow-moving, is not affected by gravity, can destroy terrain)
+
+Add different types of terrain (different types will be vulnerable to different weapons).
+ - wood (vulnerable to flamethrower)
+ - metal (vulnerable to rockets)
+ - concrete (vulnerable to cannonball)

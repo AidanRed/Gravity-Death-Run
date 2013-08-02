@@ -1,0 +1,3 @@
+ - Fix rotation of bullets in engine (PlayerBullet class)
+
+ - Get different colours and shades in mainMenu, needs to animate to change between the different shades and colours.
