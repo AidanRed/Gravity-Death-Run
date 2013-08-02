@@ -5,6 +5,7 @@ windowWidth = 640
 windowHeight = 480
 gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
+squareSize = 32
 
 
 #Squares to be drawn on-screen in the background. 
@@ -29,7 +30,9 @@ class Square:
 
 
 squares = []
-squares.append(Square(4, 6, 65, 43, (56, 57, 58)))
+for i in range(windowWidth/squareSize):
+    for ii in range(windowHeight/squareSize):
+		squares.append(Square(i*squareSize, ii*squareSize, squareSize, squareSize, (56, 57, 58)))
 
 
 @gameWindow.event
