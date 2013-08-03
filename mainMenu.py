@@ -14,14 +14,17 @@ squareSize = 32
 
 
 #Load all sprites/images
-imgNewGameSelected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameSelected.png")
-imgNewGameUnselected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameUnselected.png")
-butNewGame = Button(imgNewGameUnselected,imgNewGameSelected,imgNewGameSelected.width,imgNewGameSelected.height,(10,10))
+imgNewGameSelected = pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameSelected.png")
+imgNewGameUnselected = pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameUnselected.png")
+butNewGame = Button(imgNewGameUnselected, imgNewGameSelected, imgNewGameSelected.width, imgNewGameSelected.height,
+                    (10, 10))
+
 
 class Square:
     """
     Squares to be drawn on-screen in the background.
     """
+
     def __init__(self, x, y, height, width, columnColour):
         self.x = x
         self.y = y
@@ -36,9 +39,9 @@ class Square:
         pyglet.graphics.draw(4, GL_QUADS, ('v2i', (
             self.x, self.y + self.height, self.x + self.width, self.y + self.height, self.x + self.width, self.y,
             self.x, self.y)), ('c3B', (int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
-                               int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
-                               int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
-                               int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),)))
+                                       int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                                       int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                                       int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),)))
 
 #Shelve stuff for settings
 def changeSetting(file,key,val):
@@ -95,19 +98,25 @@ def on_draw():
         square.drawSelf()
     butNewGame.draw()
 
-
 def update(dt):
     for i in squares:
-        i.colour[0]+=0.1
-        i.colour[1]+=0.1
-        i.colour[2]+=0.1
+        i.colour[0] += 0.1
+        i.colour[1] += 0.1
+        i.colour[2] += 0.1
 
 @gameWindow.event
 def on_mouse_press(x, y, button, modifiers):
+    global mouseButtonPressed
+
     if button == pyglet.window.mouse.LEFT:
-        if butNewGame.update(x,y):
+        if butNewGame.update(x, y):
             print "print"
 
+@gameWindow.event
+def on_mouse_release(x, y, button, modifiers):
+    if button == pyglet.window.mouse.LEFT:
+        if butNewGame.pressed:
+            butNewGame.pressed = False
 
 
 
