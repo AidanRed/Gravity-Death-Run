@@ -1,12 +1,17 @@
-import pyglet, random
+import pyglet
+import random
+import simpleLibrary
 from pyglet.gl import *
 
+SEPARATOR = simpleLibrary.SEPARATOR
 windowWidth = 640
 windowHeight = 480
 gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
 squareSize = 32
 
+#Load all sprites/images
+pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameSelected.png")
 
 #Squares to be drawn on-screen in the background. 
 class Square:
