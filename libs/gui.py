@@ -38,17 +38,20 @@ class Button(object):
 
 
 class TextButton(object):
-    def __init__(self, text, colour, colourPressed, textColour, textColourPressed, width, height, xy, padding, font=None, fontSize=10, bold=False, italic=False):
-        if len(colour) == 3:
+    def __init__(self, text, colour, colour2, colour3, colour4, colourPressed, colourPressed2, colourPressed3, colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, font=None, fontSize=10, bold=False, italic=False):
+        if len(colour) == 2:
             colour = (colour[0], colour[1], colour[2], 255)
 
-        if len(colourPressed) == 3:
+        if len(colour2) == 2:
+            colour2 = (colour2[0], colour2[1], colour2[2], 255)
+
+        if len(colourPressed) == 2:
             colourPressed = (colourPressed[0], colourPressed[1], colourPressed[2], 255)
 
-        if len(textColour) == 3:
+        if len(textColour) == 2:
             textColour = (textColour[0], textColour[1], textColour[2], 255)
 
-        if len(textColourPressed) == 3:
+        if len(textColourPressed) == 2:
             textColourPressed = (textColourPressed[0], textColourPressed[1], textColourPressed[2], 255)
 
         self.rectangle = Rect(xy, width, height)
@@ -56,10 +59,19 @@ class TextButton(object):
                                        anchor_x='center', anchor_y='centre', halign='centre', multiline=True)
 
         self.colour = colour
+        self.colour2 = colour2
+        self.colour3 = colour3
+        self.colour4 = colour4
+
         self.colourPressed = colourPressed
+        self.colourPressed2 = colourPressed2
+        self.colourPressed3 = colourPressed3
+        self.colourPressed4 = colourPressed4
 
         self.textColour = textColour
         self.textColourPressed = textColourPressed
+
+        self.filled = filled
 
         self.pressed = False
 
@@ -81,17 +93,39 @@ class TextButton(object):
             if self.label.color == self.colour:
                 self.label.color = self.colourPressed
 
-        pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.topLeft.x, self.rectangle.topLeft.y,
-                                                             self.rectangle.bottomRight.x, self.rectangle.topLeft.y)))
+        if self.filled:
+            if not self.pressed:
+                pyglet.graphics.draw(4, pyglet.gl.GL_QUADS, ('v2i', (
+                    self.rectangle.x, self.rectangle.y + self.rectangle.height, self.rectangle.x + self.rectangle.width,
+                    self.rectangle.y + self.rectangle.height, self.rectangle.x + self.rectangle.width, self.rectangle.y,
+                    self.rectangle.x, self.rectangle.y)), ('c3B', (int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                                               int(self.colour2[0]), int(self.colour2[1]), int(self.colour2[2]),
+                                               int(self.colour3[0]), int(self.colour3[1]), int(self.colour3[2]),
+                                               int(self.colour4[0]), int(self.colour4[1]), int(self.colour4[2]),)))
 
-        pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.bottomRight.x, self.rectangle.topLeft.y,
-                                                             self.rectangle.bottomRight.x, self.rectangle.bottomRight.y)))
+            else:
+                pyglet.graphics.draw(4, pyglet.gl.GL_QUADS, ('v2i', (
+                    self.rectangle.x, self.rectangle.y + self.rectangle.height, self.rectangle.x + self.rectangle.width,
+                    self.rectangle.y + self.rectangle.height, self.rectangle.x + self.rectangle.width, self.rectangle.y,
+                    self.rectangle.x, self.rectangle.y)), ('c3B', (int(self.colourPressed[0]), int(self.colourPressed[1]), int(self.colourPressed[2]),
+                                                                   int(self.colourPressed2[0]), int(self.colourPressed2[1]), int(self.colourPressed2[2]),
+                                                                   int(self.colourPressed3[0]), int(self.colourPressed3[1]), int(self.colourPressed3[2]),
+                                                                   int(self.colourPressed4[0]), int(self.colourPressed4[1]), int(self.colourPressed4[2]),)))
 
-        pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.bottomRight.x, self.rectangle.bottomRight.y,
-                                                             self.rectangle.topLeft.x, self.rectangle.bottomRight.y)))
 
-        pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.topLeft.x, self.rectangle.bottomRight.y,
-                                                             self.rectangle.topLeft.x, self.rectangle.topLeft.y)))
+        else:
+            pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.topLeft.x, self.rectangle.topLeft.y,
+                                                                 self.rectangle.bottomRight.x, self.rectangle.topLeft.y)))
+
+            pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.bottomRight.x, self.rectangle.topLeft.y,
+                                                                 self.rectangle.bottomRight.x, self.rectangle.bottomRight.y)))
+
+            pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.bottomRight.x, self.rectangle.bottomRight.y,
+                                                                 self.rectangle.topLeft.x, self.rectangle.bottomRight.y)))
+
+            pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.rectangle.topLeft.x, self.rectangle.bottomRight.y,
+                                                                 self.rectangle.topLeft.x, self.rectangle.topLeft.y)))
+
         self.label.draw()
 
 
