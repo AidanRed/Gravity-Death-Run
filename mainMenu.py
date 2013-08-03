@@ -11,6 +11,7 @@ windowHeight = 480
 gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
 squareSize = 32
+colourChange = 1
 
 
 #Load all sprites/images
@@ -32,6 +33,7 @@ class Square:
         self.width = width
         #colour. Originally set to universal colour (for the column the square belongs to)
         self.colour = columnColour
+        self.colourDirection = "-"
         #Shade. random number to start with, gradually increases to 255 then after a pause returns to 0 and gradually increases again
         self.shade = 1
 
@@ -106,9 +108,30 @@ def on_draw():
 
 def update(dt):
     for i in squares:
-        i.colour[0] -= 0.2
-        i.colour[1] -= 0.2
-        i.colour[2] -= 0.2
+        if i.colour[0] <= colourChange:
+            if i.colourDirection != "-":
+                i.colourDirection = "+"
+                i.colour[0] -= colourChange
+        elif i.colour[0] >= 255-colourChange:
+            if i.colourDirection != "+":
+                i.colourDirection = "-"
+                i.colour[0] += colourChange
+        if i.colour[1] <= colourChange:
+            if i.colourDirection != "-":
+                i.colourDirection = "+"
+                i.colour[1] -= colourChange
+        elif i.colour[1] >= 255-colourChange:
+            if i.colourDirection != "+":
+                i.colourDirection = "-"
+                i.colour[1] += colourChange
+        if i.colour[2] <= colourChange:
+            if i.colourDirection != "-":
+                i.colourDirection = "+"
+                i.colour[2] -= colourChange
+        elif i.colour[2] >= 255-colourChange:
+            if i.colourDirection != "+":
+                i.colourDirection = "-"
+                i.colour[2] += colourChange
 
 @gameWindow.event
 def on_mouse_press(x, y, button, modifiers):
