@@ -1,5 +1,6 @@
 import pyglet
 import random
+import shelve
 from libs.gui import Button
 from libs import simpleLibrary
 from pyglet.gl import *
@@ -38,6 +39,19 @@ class Square:
                                int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
                                int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
                                int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),)))
+
+#Shelve stuff for settings
+def changeSetting(file,key,val):
+    shelf = shelve.open(file)
+    shelf[key] = val
+    shelf.close()
+
+def readSetting(file,key):
+    shelf = shelve.open(file)
+    return shelf[key]
+    shelf.close()
+
+
 
 
 #Create the squares and set them to a grid constrained to the screen size.
@@ -93,6 +107,7 @@ def on_mouse_press(x, y, button, modifiers):
     if button == pyglet.window.mouse.LEFT:
         if butNewGame.update(x,y):
             print "print"
+
 
 
 

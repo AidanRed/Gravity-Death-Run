@@ -9,3 +9,8 @@ Add different types of terrain (different types will be vulnerable to different 
  - wood (vulnerable to flamethrower)
  - metal (vulnerable to rockets)
  - concrete (vulnerable to cannonball)
+
+ Settings to be changed
+ - resolution
+ - volume
+ - open hoi3 on level completion
