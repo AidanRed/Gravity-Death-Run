@@ -5,9 +5,9 @@ TODO:
 """
 from pyglet.window import key
 import pyglet
-from vectors import Vector2
-from simpleLibrary import SEPARATOR
-import boundingShapes
+from libs.vectors import Vector2
+from libs.simpleLibrary import SEPARATOR
+from libs import boundingShapes
 import math
 
 

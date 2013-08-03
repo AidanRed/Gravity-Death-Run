@@ -1,6 +1,6 @@
 import pyglet
 import engine
-import simpleLibrary
+from libs import simpleLibrary
 
 
 def centreImage(image):
