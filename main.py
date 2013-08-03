@@ -18,6 +18,8 @@ player1 = engine.Player(window.width / 5, window.height / 2, playerImage, batch1
 
 window.push_handlers(player1.key_handler)
 
+weaponLabel = pyglet.text.Label(color=(0, 255, 0, 255), batch=batch1)
+weaponLabel.text = player1.weaponList[player1.equippedWeapon]
 
 @window.event
 def on_draw():
@@ -27,6 +29,8 @@ def on_draw():
 
 def update(dt):
     player1.update(dt)
+    if weaponLabel.text != player1.equippedWeapon:
+        weaponLabel.text = player1.weaponList[player1.equippedWeapon]
 
 
 pyglet.clock.schedule_interval(update, 1.0 / 120.0)
