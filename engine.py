@@ -7,6 +7,7 @@ from pyglet.window import key
 import pyglet
 from vectors import Vector2
 from simpleLibrary import SEPARATOR
+import boundingShapes
 import math
 
 
@@ -17,7 +18,9 @@ class Size(object):
 
 
 class Projectile(object):
-    def __init__(self, x, y, image, batch, windowSize, player, speed, gravity):
+    def __init__(self, x, y, image, batch, windowSize, player, speed, gravity, boundingType="rectangle"):
+        image.anchor_x = image.width / 2
+        image.anchor_y = image.height / 2
         self.sprite = pyglet.sprite.Sprite(image, x=x, y=y, batch=batch)
 
         self.gravity = gravity
@@ -30,6 +33,13 @@ class Projectile(object):
         self.windowSize = windowSize
 
         self.destroyed = False
+
+        if boundingType.lower() == "rectangle":
+            self.boundingShape = boundingShapes.Rectangle((image.x, image.y), image.width, image.height)
+
+        elif boundingType.lower() == "circle":
+            radius = max(image.width, image.height)
+            self.boundingShape = boundingShapes.Circle((image.x, image.y), radius)
 
     def update(self, dt):
         if not self.destroyed:
