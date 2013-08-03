@@ -51,8 +51,9 @@ def changeSetting(file,key,val):
 
 def readSetting(file,key):
     shelf = shelve.open(file)
-    return shelf[key]
     shelf.close()
+    return shelf[key]
+
 
 
 
@@ -80,16 +81,21 @@ orange = [153, 255, 51]
 
 colours = [lblue, blue, dblue, red, pink, purple, green, dgreen, lgreen, yellow, orange]
 
+#Determine a random colour to give to each column
 possibleColours = []
 for i in range(windowWidth / squareSize):
     possibleColours.append(colours[random.randint(0, 10)])
-    print i
 
 for i in range(windowWidth / squareSize):
     for ii in squares:
         if i * squareSize == ii.x:
             ii.colour = possibleColours[i]
 
+#Determine slight variations in colour for each square.
+
+for i in squares:
+        i.colour = [i.colour[0]+random.randint(1,50),i.colour[1]+random.randint(1,50),i.colour[2]+random.randint(1,50)]
+        print str(i.colour)
 
 @gameWindow.event
 def on_draw():
@@ -100,9 +106,9 @@ def on_draw():
 
 def update(dt):
     for i in squares:
-        i.colour[0] += 0.1
-        i.colour[1] += 0.1
-        i.colour[2] += 0.1
+        i.colour[0] -= 0.2
+        i.colour[1] -= 0.2
+        i.colour[2] -= 0.2
 
 @gameWindow.event
 def on_mouse_press(x, y, button, modifiers):
