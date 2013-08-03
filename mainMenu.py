@@ -1,10 +1,6 @@
 import pyglet
 import random
-<<<<<<< HEAD
-import simpleLibrary
-=======
 from libs import simpleLibrary
->>>>>>> 198fc8bb10c28abbf40f90a2e47cfd46bb912d2d
 from pyglet.gl import *
 
 SEPARATOR = simpleLibrary.SEPARATOR
@@ -15,15 +11,15 @@ FPS = 60
 squareSize = 32
 
 #Load all sprites/images
-<<<<<<< HEAD
+
 imgNewGameSelected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameSelected.png")
 sprNewGameSelected = pyglet.sprite.Sprite(imgNewGameSelected, x=10,y=10)
 imgNewGameUnselected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameUnselected.png")
 sprNewGameUnselected = pyglet.sprite.Sprite(imgNewGameSelected, x=10,y=10)
-=======
+
 pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameSelected.png")
 
->>>>>>> 198fc8bb10c28abbf40f90a2e47cfd46bb912d2d
+
 
 class Square:
     """
