@@ -12,14 +12,13 @@ gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
 squareSize = 32
 colourChange = 1
-
-
+'''This string defines which screen is active. This will either be 'main', 'settings', or 'highscores' '''
+screen = "main"
 #Load all sprites/images
 imgNewGameSelected = pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameSelected.png")
 imgNewGameUnselected = pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameUnselected.png")
 butNewGame = Button(imgNewGameUnselected, imgNewGameSelected, imgNewGameSelected.width, imgNewGameSelected.height,
                     (10, 10))
-
 
 class Square:
     """
@@ -46,13 +45,13 @@ class Square:
                                        int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),)))
 
 #Shelve stuff for settings
-def changeSetting(file,key,val):
-    shelf = shelve.open(file)
+def changeSetting(filename,key,val):
+    shelf = shelve.open(filename)
     shelf[key] = val
     shelf.close()
 
-def readSetting(file,key):
-    shelf = shelve.open(file)
+def readSetting(filename,key):
+    shelf = shelve.open(filename)
     shelf.close()
     return shelf[key]
 
