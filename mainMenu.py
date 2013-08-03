@@ -1,4 +1,5 @@
-import pyglet, random
+import pyglet
+import random
 from pyglet.gl import *
 
 windowWidth = 640
@@ -50,18 +51,7 @@ dgreen = [0, 102, 0]
 yellow = [255, 255, 255]
 orange = [153, 255, 51]
 
-colours = []
-colours.append(lblue)
-colours.append(blue)
-colours.append(dblue)
-colours.append(red)
-colours.append(pink)
-colours.append(purple)
-colours.append(green)
-colours.append(dgreen)
-colours.append(lgreen)
-colours.append(yellow)
-colours.append(orange)
+colours = [lblue, blue, dblue, red, pink, purple, green, dgreen, lgreen, yellow, orange]
 
 possibleColours = []
 for i in range(windowWidth / squareSize):
