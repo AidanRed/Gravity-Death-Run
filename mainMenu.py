@@ -1,5 +1,6 @@
 import pyglet
 import random
+from libs.gui import Button
 from libs import simpleLibrary
 from pyglet.gl import *
 
@@ -10,16 +11,11 @@ gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
 squareSize = 32
 
+
 #Load all sprites/images
-
 imgNewGameSelected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameSelected.png")
-sprNewGameSelected = pyglet.sprite.Sprite(imgNewGameSelected, x=10,y=10)
 imgNewGameUnselected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameUnselected.png")
-sprNewGameUnselected = pyglet.sprite.Sprite(imgNewGameSelected, x=10,y=10)
-
-pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameSelected.png")
-
-
+butNewGame = Button(imgNewGameUnselected,imgNewGameSelected,imgNewGameSelected.width,imgNewGameSelected.height,(10,10))
 
 class Square:
     """
@@ -83,6 +79,7 @@ def on_draw():
     gameWindow.clear()
     for square in squares:
         square.drawSelf()
+    butNewGame.draw()
 
 
 def update(dt):
@@ -90,6 +87,14 @@ def update(dt):
         i.colour[0]+=0.1
         i.colour[1]+=0.1
         i.colour[2]+=0.1
+
+@gameWindow.event
+def on_mouse_press(x, y, button, modifiers):
+    if button == pyglet.window.mouse.LEFT:
+        if butNewGame.update(x,y):
+            print "print"
+
+
 
 
 pyglet.clock.schedule_interval(update, 1.0 / 120.0)
