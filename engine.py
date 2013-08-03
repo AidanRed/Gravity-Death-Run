@@ -16,13 +16,14 @@ class Size(object):
         self.height = height
 
 
-class PlayerBullet(object):
-    def __init__(self, x, y, batch, windowSize, player):
-        image = pyglet.image.load("resources" + SEPARATOR + "playerBullet.png")
+class Projectile(object):
+    def __init__(self, x, y, image, batch, windowSize, player, speed, gravity):
         self.sprite = pyglet.sprite.Sprite(image, x=x, y=y, batch=batch)
 
-        self.bulletSpeed = 500
-        self.velocity = Vector2(self.bulletSpeed, 0)
+        self.gravity = gravity
+
+        self.speed = speed
+        self.velocity = Vector2(self.speed, 0)
 
         self.player = player
 
@@ -32,9 +33,9 @@ class PlayerBullet(object):
 
     def update(self, dt):
         if not self.destroyed:
-            self.velocity.y += (self.player.gravity * 3) * dt
+            self.velocity.y += (self.player.gravity * 2) * dt
 
-            self.sprite.rotation = math.degrees(self.velocity.getAngle())
+            self.sprite.rotation = 360 - math.degrees(self.velocity.getAngle())
 
             self.sprite.x += self.velocity.x * dt
             self.sprite.y += self.velocity.y * dt
@@ -42,13 +43,44 @@ class PlayerBullet(object):
             if self.sprite.x > self.windowSize.width or self.sprite.x < 0:
                 self.destroy()
 
-            if self.sprite.y > self.windowSize.height or self.sprite.y < 0:
-                self.destroy()
+                #Removed to allow the projectile to go off the sides of the screen
+                ##if self.sprite.y > self.windowSize.height or self.sprite.y < 0:
+                ##    self.destroy()
 
     def destroy(self):
         if not self.destroyed:
             self.destroyed = True
             self.sprite.delete()
+
+
+class PlayerBullet(Projectile):
+    def __init__(self, x, y, batch, windowSize, player):
+        image = pyglet.image.load("resources" + SEPARATOR + "playerBullet.png")
+
+        bulletSpeed = 1500
+        gravity = player.gravity * 2
+
+        super(PlayerBullet, self).__init__(x, y, image, batch, windowSize, player, bulletSpeed, gravity)
+
+
+class PlayerRocket(Projectile):
+    def __init__(self, x, y, batch, windowSize, player):
+        image = pyglet.image.load("resources" + SEPARATOR + "playerRocket.png")
+
+        rocketSpeed = 400
+        gravity = player.gravity * 3
+
+        super(PlayerRocket, self).__init__(x, y, image, batch, windowSize, player, rocketSpeed, gravity)
+
+
+class PlayerCannonball(Projectile):
+    def __init__(self, x, y, batch, windowSize, player):
+        image = pyglet.image.load("resources" + SEPARATOR + "playerCannonball.png")
+
+        cannonballSpeed = 500
+        gravity = 0
+
+        super(PlayerCannonball, self).__init__(x, y, image, batch, windowSize, player, cannonballSpeed, gravity)
 
 
 class Player(object):
