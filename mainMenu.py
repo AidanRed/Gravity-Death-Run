@@ -58,8 +58,6 @@ def readSetting(file,key):
 
 
 
-
-
 #Create the squares and set them to a grid constrained to the screen size.
 squares = []
 for i in range(windowWidth / squareSize):
