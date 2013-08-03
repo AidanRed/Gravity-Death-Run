@@ -1,3 +1,8 @@
- - Fix rotation of bullets in engine (PlayerBullet class)
+MainMenu:
 
- - Get different colours and shades in mainMenu, needs to animate to change between the different shades and colours.
+ - Need to add buttons (done by 3/08/2013):
+ Arcade mode
+ Endless mode
+ High Scores
+ Options
+ Exit
