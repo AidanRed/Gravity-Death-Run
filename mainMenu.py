@@ -1,6 +1,10 @@
 import pyglet
 import random
+<<<<<<< HEAD
 import simpleLibrary
+=======
+from libs import simpleLibrary
+>>>>>>> 198fc8bb10c28abbf40f90a2e47cfd46bb912d2d
 from pyglet.gl import *
 
 SEPARATOR = simpleLibrary.SEPARATOR
@@ -11,13 +15,20 @@ FPS = 60
 squareSize = 32
 
 #Load all sprites/images
+<<<<<<< HEAD
 imgNewGameSelected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameSelected.png")
 sprNewGameSelected = pyglet.sprite.Sprite(imgNewGameSelected, x=10,y=10)
 imgNewGameUnselected = pyglet.image.load("resources"+SEPARATOR+"menu"+SEPARATOR+"menuNewGameUnselected.png")
 sprNewGameUnselected = pyglet.sprite.Sprite(imgNewGameSelected, x=10,y=10)
+=======
+pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameSelected.png")
 
-#Squares to be drawn on-screen in the background. 
+>>>>>>> 198fc8bb10c28abbf40f90a2e47cfd46bb912d2d
+
 class Square:
+    """
+    Squares to be drawn on-screen in the background.
+    """
     def __init__(self, x, y, height, width, columnColour):
         self.x = x
         self.y = y
@@ -83,7 +94,6 @@ def update(dt):
         i.colour[0]+=0.1
         i.colour[1]+=0.1
         i.colour[2]+=0.1
-
 
 
 pyglet.clock.schedule_interval(update, 1.0 / 120.0)
