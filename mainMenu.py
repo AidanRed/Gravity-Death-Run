@@ -5,20 +5,31 @@ from libs.gui import Button
 from libs import simpleLibrary
 from pyglet.gl import *
 
+'''constants'''
 SEPARATOR = simpleLibrary.SEPARATOR
+
+'''variables'''
 windowWidth = 640
 windowHeight = 480
 gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
 squareSize = 32
 colourChange = 1
-'''This string defines which screen is active. This will either be 'main', 'settings', or 'highscores' '''
+#This string defines which screen is active. This will either be 'main', 'settings', or 'high-scores'
 screen = "main"
+
+def loadImage(mpath):
+    return pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + mpath)
+
 #Load all sprites/images
-imgNewGameSelected = pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameSelected.png")
-imgNewGameUnselected = pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + "menuNewGameUnselected.png")
+imgNewGameSelected = loadImage("menuNewGameSelected.png")
+imgNewGameUnselected = loadImage("menuNewGameUnselected.png")
+imgSettingsSelected = loadImage("menuSettingsSelected.png")
+imgSettingsUnselected = loadImage("menuSettingsUnselected.png")
 butNewGame = Button(imgNewGameUnselected, imgNewGameSelected, imgNewGameSelected.width, imgNewGameSelected.height,
                     (10, 10))
+butSettings = Button(imgSettingsUnselected, imgSettingsSelected, imgSettingsSelected.width, imgSettingsSelected.height,
+    (139,10))
 
 class Square:
     """
@@ -33,8 +44,6 @@ class Square:
         #colour. Originally set to universal colour (for the column the square belongs to)
         self.colour = columnColour
         self.colourDirection = "-"
-        #Shade. random number to start with, gradually increases to 255 then after a pause returns to 0 and gradually increases again
-        self.shade = 1
 
     def drawSelf(self):
         pyglet.graphics.draw(4, GL_QUADS, ('v2i', (
@@ -94,14 +103,15 @@ for i in range(windowWidth / squareSize):
 
 for i in squares:
         i.colour = [i.colour[0]+random.randint(1,50),i.colour[1]+random.randint(1,50),i.colour[2]+random.randint(1,50)]
-        print str(i.colour)
 
 @gameWindow.event
 def on_draw():
     gameWindow.clear()
     for square in squares:
         square.drawSelf()
-    butNewGame.draw()
+    if screen == "main":
+        butNewGame.draw()
+        butSettings.draw()
 
 def update(dt):
     for i in squares:
@@ -133,16 +143,20 @@ def update(dt):
 @gameWindow.event
 def on_mouse_press(x, y, button, modifiers):
     global mouseButtonPressed
-
+    global screen
     if button == pyglet.window.mouse.LEFT:
-        if butNewGame.update(x, y):
-            print "print"
+        if screen == "main":
+            if butNewGame.update(x, y):
+                print "print"
+            if butSettings.update(x, y):
+                screen = "settings"
 
 @gameWindow.event
 def on_mouse_release(x, y, button, modifiers):
     if button == pyglet.window.mouse.LEFT:
-        if butNewGame.pressed:
-            butNewGame.pressed = False
+        if screen == "main":
+            if butNewGame.pressed:
+                butNewGame.pressed = False
 
 
 
