@@ -148,7 +148,7 @@ def on_mouse_press(x, y, button, modifiers):
         if screen == "main":
             if butNewGame.update(x, y):
                 print "print"
-            if butSettings.update(x, y):
+            elif butSettings.update(x, y):
                 screen = "settings"
 
 @gameWindow.event
