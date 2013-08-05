@@ -39,20 +39,36 @@ class Button(object):
 
 class TextButton(object):
     def __init__(self, text, colour, colour2, colour3, colour4, colourPressed, colourPressed2, colourPressed3, colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, font=None, fontSize=10, bold=False, italic=False):
-        if len(colour) == 2:
+        if len(colour) == 3:
             colour = (colour[0], colour[1], colour[2], 255)
 
-        if len(colour2) == 2:
+        if len(colour2) == 3:
             colour2 = (colour2[0], colour2[1], colour2[2], 255)
 
-        if len(colourPressed) == 2:
+        if len(colour3) == 3:
+            colour3 = (colour3[0], colour3[1], colour3[2], 255)
+
+        if len(colour4) == 3:
+            colour4 = (colour4[0], colour4[1], colour4[2], 255)
+
+        if len(colourPressed) == 3:
             colourPressed = (colourPressed[0], colourPressed[1], colourPressed[2], 255)
 
-        if len(textColour) == 2:
+        if len(colourPressed2) == 3:
+            colourPressed2 = (colourPressed2[0], colourPressed2[1], colourPressed3[2], 255)
+
+        if len(colourPressed3) == 3:
+            colourPressed3 = (colourPressed3[0], colourPressed3[1], colourPressed3[2], 255)
+
+        if len(colourPressed4) == 3:
+            colourPressed4 = (colourPressed4[0], colourPressed4[1], colourPressed4[2], 255)
+
+        if len(textColour) == 3:
             textColour = (textColour[0], textColour[1], textColour[2], 255)
 
-        if len(textColourPressed) == 2:
+        if len(textColourPressed) == 3:
             textColourPressed = (textColourPressed[0], textColourPressed[1], textColourPressed[2], 255)
+
 
         self.rectangle = Rect(xy, width, height)
         self.label = pyglet.text.Label(text, font, fontSize, bold, italic, colour, xy[0], xy[1], width - padding[0], height - padding[1],
