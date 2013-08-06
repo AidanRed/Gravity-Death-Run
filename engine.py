@@ -211,6 +211,7 @@ class Player(object):
         elif currentWeapon == "rocket":
             self.bullets.append(PlayerRocket(self.sprite.x, self.sprite.y, self.sprite.batch, self.windowSize, self))
 
+
 class TileMap(object):
     def __init__(self, windowSize):
         #The keys for the dictionary is the column number that you want to access.
@@ -226,3 +227,42 @@ class TileMap(object):
 
     def update(self, dt):
         self.bottomLeft.x += self.scrollSpeed
+
+
+class SoundQueue(object):
+    def __init__(self):
+        self.currentTime = 0
+        self.sounds = {}
+
+        #self.currentSound =
+
+    def addSound(self, sound, delay, volume, playTime=-1.0, continuous=False):
+        """
+        Parameters:
+
+        delay: the delay before the sound starts playing
+
+        playTime: the amount of time (in seconds) that the sound will play for (-1 will play for the entire duration, if continuous
+        is set to true, this parameter is ignored)
+
+        continuous: if set to true, the sound will continue looping/playing until a signal is given for it to stop
+        """
+        #self.sounds[]
+        self.sounds[sound] = {"delay" : self.currentTime + delay, "volume" : volume, "playTime" : playTime, "continuous" : continuous}
+
+    def deleteSound(self, sound):
+        del self.sounds[sound]
+
+    def update(self, dt):
+        self.currentTime += dt
+        for sound in self.sounds.keys():
+            if sound["continuous"]:
+                sound.play()
+
+            else:
+                if self.currentTime >= self.sounds[sound]["delay"]:
+                    sound.play()
+                    del self.sounds[sound]
+
+        if len(self.sounds.keys()) == 0:
+            self.currentTime = 0
