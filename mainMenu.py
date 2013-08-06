@@ -1,14 +1,14 @@
 import pyglet
 import random
 import shelve
-from libs.gui import Button
+from libs.gui import TextButton
 from libs import simpleLibrary
 from pyglet.gl import *
 
-'''constants'''
+#constants
 SEPARATOR = simpleLibrary.SEPARATOR
 
-'''variables'''
+#variables
 windowWidth = 640
 windowHeight = 480
 gameWindow = pyglet.window.Window(windowWidth, windowHeight)
@@ -18,18 +18,16 @@ colourChange = 1
 #This string defines which screen is active. This will either be 'main', 'settings', or 'high-scores'
 screen = "main"
 
+
 def loadImage(mpath):
     return pyglet.image.load("resources" + SEPARATOR + "menu" + SEPARATOR + mpath)
 
-#Load all sprites/images
-imgNewGameSelected = loadImage("menuNewGameSelected.png")
-imgNewGameUnselected = loadImage("menuNewGameUnselected.png")
-imgSettingsSelected = loadImage("menuSettingsSelected.png")
-imgSettingsUnselected = loadImage("menuSettingsUnselected.png")
-butNewGame = Button(imgNewGameUnselected, imgNewGameSelected, imgNewGameSelected.width, imgNewGameSelected.height,
-                    (10, 10))
-butSettings = Button(imgSettingsUnselected, imgSettingsSelected, imgSettingsSelected.width, imgSettingsSelected.height,
-    (139,10))
+buttonSettings = TextButton("Settings", (0, 0, 255), (0, 0, 255), (0, 0, 255), (0, 0, 255), (100, 0, 255), (100, 0, 255),
+                            (100, 0, 255), (100, 0, 255), (0, 255, 0), (255, 255, 255), 64, 32, (640 - 74, 52), (10, 5))
+
+buttonNewGame = TextButton("New Game", (0, 0, 255), (0, 0, 255), (0, 0, 255), (0, 0, 255), (100, 0, 255), (100, 0, 255),
+                        (100, 0, 255), (100, 0, 255), (0, 255, 0), (255, 255, 255), 64, 32, (74, 52), (10, 5))
+
 
 class Square:
     """
@@ -110,8 +108,8 @@ def on_draw():
     for square in squares:
         square.drawSelf()
     if screen == "main":
-        butNewGame.draw()
-        butSettings.draw()
+        buttonNewGame.draw()
+        buttonSettings.draw()
 
 def update(dt):
     for i in squares:
@@ -146,17 +144,17 @@ def on_mouse_press(x, y, button, modifiers):
     global screen
     if button == pyglet.window.mouse.LEFT:
         if screen == "main":
-            if butNewGame.update(x, y):
+            if buttonNewGame.update(x, y):
                 print "print"
-            elif butSettings.update(x, y):
+            elif buttonSettings.update(x, y):
                 screen = "settings"
 
 @gameWindow.event
 def on_mouse_release(x, y, button, modifiers):
     if button == pyglet.window.mouse.LEFT:
         if screen == "main":
-            if butNewGame.pressed:
-                butNewGame.pressed = False
+            if buttonNewGame.pressed:
+                buttonNewGame.pressed = False
 
 
 
