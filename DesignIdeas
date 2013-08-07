@@ -1,4 +1,5 @@
 Add different types of guns.
+ - pistol
  - flamethrower
  - rocket launcher (can destroy terrain, gravity acts as 'guidance' system)
  - machine gun
@@ -9,8 +10,10 @@ Add different types of terrain (different types will be vulnerable to different 
  - wood (vulnerable to flamethrower)
  - metal (vulnerable to rockets)
  - concrete (vulnerable to cannonball)
+ - glass - refracts laser rifle (vulnerable to machine gun and pistol)
 
  Settings to be changed
  - resolution
  - volume
- - open hoi3 on level completion
+
+  Make some types of terrain tiles move up and down to add challenge
