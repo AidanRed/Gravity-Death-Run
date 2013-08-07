@@ -77,3 +77,10 @@ def forceChoice(initialMessage, list1):
             print "That is not a valid answer!\n"
 
     return input1
+
+#Not the best system, but the more code the better.
+def encrypt(number):
+    return number/-3.6
+
+def decrypt(number):
+    return number*-3.6
