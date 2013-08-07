@@ -28,6 +28,8 @@ buttonSettings = TextButton("Settings", (0, 0, 255), (0, 0, 255), (0, 0, 255), (
 buttonNewGame = TextButton("New Game", (0, 0, 255), (0, 0, 255), (0, 0, 255), (0, 0, 255), (100, 0, 255), (100, 0, 255),
                         (100, 0, 255), (100, 0, 255), (0, 255, 0), (255, 255, 255), 64, 32, (74, 52), (10, 5))
 
+buttonResolution640_480 = TextButton("640*480", (0, 0, 255), (0, 0, 255), (0, 0, 255), (0, 0, 255),(100, 0, 255), (100, 0, 255),
+                            (100, 0, 255), (100, 0, 255),(0, 255, 0), (255, 255, 255), 48, 16, (64, 192), (0, 0))
 
 class Square:
     """
@@ -110,6 +112,8 @@ def on_draw():
     if screen == "main":
         buttonNewGame.draw()
         buttonSettings.draw()
+    if screen == "settings":
+        buttonResolution640_480.draw()
 
 def update(dt):
     for i in squares:
@@ -148,6 +152,10 @@ def on_mouse_press(x, y, button, modifiers):
                 print "print"
             elif buttonSettings.update(x, y):
                 screen = "settings"
+        if screen == "settings":
+            if buttonResolution640_480.update(x, y):
+                changeSetting("settings.dat","resolutionWidth",640)
+                changeSetting("settings.dat","resolutionHeight",480)
 
 @gameWindow.event
 def on_mouse_release(x, y, button, modifiers):
@@ -155,6 +163,11 @@ def on_mouse_release(x, y, button, modifiers):
         if screen == "main":
             if buttonNewGame.pressed:
                 buttonNewGame.pressed = False
+            if buttonSettings.pressed:
+                buttonSettings.pressed = False
+        if screen == "settings":
+            if buttonResolution640_480.pressed:
+                buttonResolution640_480.pressed = False
 
 
 
