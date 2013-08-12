@@ -9,6 +9,7 @@ from libs.vectors import Vector2
 from libs.simpleLibrary import SEPARATOR
 from libs import boundingShapes
 import math
+import random
 
 
 class Size(object):
@@ -123,6 +124,8 @@ class Player(object):
         self.allowKeypress = {key.ENTER : True, key.SPACE : True, key.RIGHT : True, key.LEFT : True}
         self.key_handler = key.KeyStateHandler()
 
+        self.jetpackPower = 400
+
         self.bullets = []
 
         self.equippedWeapon = 0
@@ -147,7 +150,9 @@ class Player(object):
 
         self.bullets = newBulletList
 
-        self.sprite.y += self.gravity * dt
+        self.dy += self.gravity
+
+        self.sprite.y += self.dy * dt
         self.sprite.x += self.dx * dt
 
         self.dy = self.gravity
@@ -200,6 +205,12 @@ class Player(object):
         elif not self.key_handler[key.LEFT] and not self.allowKeypress[key.LEFT]:
             self.allowKeypress[key.LEFT] = True
 
+        if self.key_handler[key.UP]:
+            self.dy += self.jetpackPower
+
+        if self.key_handler[key.DOWN]:
+            self.dy -= self.jetpackPower
+
     def fire(self):
         currentWeapon = self.weaponList[self.equippedWeapon]
         if currentWeapon == "pistol":
@@ -213,23 +224,82 @@ class Player(object):
 
 
 class TileMap(object):
-    def __init__(self, windowSize):
+    def __init__(self, windowSize, batch):
         #The keys for the dictionary is the column number that you want to access.
         self.data = {}
+
+        self.tilesTypes = ["wood", "concrete", "metal", "dirt", "glass"]
+        self.tileChoices = {"dirt" : [], "wood" : [], "concrete" : [], "metal" : [], "glass" : []}
+
         self.windowSize = windowSize
+        self.tileSize = 16
 
-        self.leftColumnOffset = 0
-        self.rightColumnOffset = 0
+        self.batch = batch
 
-        self.bottomLeft = Vector2(0, 0)
+        self.tileChoices["dirt"].append("dirtBase1")
+        self.tileChoices["dirt"].append("grassTile1")
+
+        ##Removed - the resources have not yet been added
+        """
+        grassTile2 = pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "grassTile2.png"))
+        self.tileChoices["dirt"].append(grassTile2)
+
+        grassTile3 = pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "grassTile3.png"))
+        self.tileChoices["dirt"].append(grassTile3)
+        """
+
+        self.windowSize = windowSize
+        self.heightInTiles = int((self.windowSize.height / self.tileSize) + 2)
+        self.widthInTiles = int((self.windowSize.width / self.tileSize) + 2)
 
         self.scrollSpeed = 500
 
+        #populate the screen with tiles
+        for x in range(self.widthInTiles):
+            self.data[x] = {}
+            for y in range(self.heightInTiles):
+                ##self.data[x][y] = random.choice(self.tileChoices[random.choice(self.tilesTypes)])
+                self.data[x][y] = self.choiceParser(random.choice(self.tileChoices["dirt"]))
+                self.data[x][y].x = (x + 1) * self.tileSize
+                self.data[x][y].y = (y + 1) * self.tileSize
+
+    def choiceParser(self, choice):
+        resourceFilePath = "resources" + SEPARATOR
+
+        if choice == "grassTile1":
+            return pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "grassTile1.png"), batch=self.batch)
+
+        elif choice == "dirtBase1":
+            return pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "dirtBase1.png"), batch=self.batch)
+
+    def addColumn(self):
+        newColumnNumber = max(self.data.keys()) + 1
+        self.data[newColumnNumber] = {}
+        for y in range(self.heightInTiles):
+            ##self.data[newColumnNumber][y] = random.choice(self.tileChoices[random.choice(self.tilesTypes)])
+            self.data[newColumnNumber][y] = self.choiceParser(random.choice(self.tileChoices["dirt"]))
+            self.data[newColumnNumber][y].x = (newColumnNumber + 1) * self.tileSize
+            self.data[newColumnNumber][y].y = (y + 1) * self.tileSize
+
     def update(self, dt):
-        self.bottomLeft.x += self.scrollSpeed
+        for column in self.data.keys():
+            sprite = self.data[column][0]
+            if sprite.x + sprite.width / 2 < 0:
+                del self.data[column]
+                self.addColumn()
+
+            else:
+                moveValue = self.scrollSpeed * dt
+                for thing in self.data[column].values():
+                    thing.x -= moveValue
 
 
 class SoundQueue(object):
+    """
+    TODO:
+     - Add the ability to make a sound play when another sound has finished playing
+     - Make the keys an identifier rather than the sound to play
+    """
     def __init__(self):
         self.currentTime = 0
         self.sounds = {}

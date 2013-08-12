@@ -21,6 +21,8 @@ window.push_handlers(player1.key_handler)
 weaponLabel = pyglet.text.Label(color=(0, 255, 0, 255), batch=batch1)
 weaponLabel.text = player1.weaponList[player1.equippedWeapon]
 
+##tileMap = engine.TileMap(engine.Size(window.width, window.height), batch1)
+
 @window.event
 def on_draw():
     window.clear()
@@ -31,6 +33,8 @@ def update(dt):
     player1.update(dt)
     if weaponLabel.text != player1.equippedWeapon:
         weaponLabel.text = player1.weaponList[player1.equippedWeapon]
+
+    #tileMap.update(dt)
 
 
 pyglet.clock.schedule_interval(update, 1.0 / 120.0)
