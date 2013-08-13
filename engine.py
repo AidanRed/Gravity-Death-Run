@@ -114,17 +114,18 @@ class Player(object):
         self.halfHeight = image.height / 2
         self.halfWidth = image.width / 2
 
-        self.dx = 0
-        self.dy = 0
+        self.gravity = -1000
 
-        self.gravity = -500
+        self.velocity = Vector2(0, self.gravity)
+
+        self.acceleration = Vector2(0, 0)
 
         self.allowPress = True
 
         self.allowKeypress = {key.ENTER : True, key.SPACE : True, key.RIGHT : True, key.LEFT : True}
         self.key_handler = key.KeyStateHandler()
 
-        self.jetpackPower = 400
+        self.jetpackPower = 30
 
         self.bullets = []
 
@@ -132,12 +133,18 @@ class Player(object):
 
         self.weaponList = ["pistol", "cannon", "rocket"]
 
+        self.spriteHidingPlace = Vector2(-100, -100)
+
+        flameImage = pyglet.image.load("resources" + SEPARATOR + "flame1.png")
+        self.rocketSprite = pyglet.sprite.Sprite(flameImage, x=self.spriteHidingPlace.x,
+                                                 y=self.spriteHidingPlace.y, batch=batch)
+
+        self.invertedRocketSprite = pyglet.sprite.Sprite(flameImage, x=self.spriteHidingPlace.x,
+                                                         y=self.spriteHidingPlace.y, batch=batch)
+        self.invertedRocketSprite.rotation = 180
+
+
     def update(self, dt):
-        ##Changed to make the movement less 'elastic' and instead more responsive
-        #self.dy += self.gravity * dt
-
-        #self.sprite.y += self.dy * dt
-
         #Remove all the destroyed bullets from the list
         newBulletList = []
         for bullet in self.bullets:
@@ -150,24 +157,24 @@ class Player(object):
 
         self.bullets = newBulletList
 
-        self.dy += self.gravity
+        self.acceleration.y = self.gravity
+        self.velocity.y += self.acceleration.y * dt
 
-        self.sprite.y += self.dy * dt
-        self.sprite.x += self.dx * dt
-
-        self.dy = self.gravity
+        self.sprite.y += self.velocity.y * dt + 0.5 * self.acceleration.y * dt * dt
 
         if self.sprite.y - self.halfHeight < 0:
             self.sprite.y = 0 + self.halfHeight
-            self.dy = 0
+            self.velocity.y = 0
 
         elif self.sprite.y + self.halfHeight > self.windowSize.height:
             self.sprite.y = self.windowSize.height - self.halfHeight
-            self.dy = 0
+            self.velocity.y = 0
 
         #Set 'enter' to flip gravity
         if self.key_handler[key.ENTER] and self.allowKeypress[key.ENTER]:
             self.gravity = -self.gravity
+            self.velocity.y = 0
+
             self.allowKeypress[key.ENTER] = False
 
         elif not self.key_handler[key.ENTER] and not self.allowKeypress[key.ENTER]:
@@ -206,10 +213,12 @@ class Player(object):
             self.allowKeypress[key.LEFT] = True
 
         if self.key_handler[key.UP]:
-            self.dy += self.jetpackPower
+            self.velocity.y += self.jetpackPower
+            self.rocketSprite.x = self.x - self.width / 2 - 5
+            self.rocketSprite.y = self.y - self.rocketSprite.height / 2
 
         if self.key_handler[key.DOWN]:
-            self.dy -= self.jetpackPower
+            self.velocity.y -= self.jetpackPower
 
     def fire(self):
         currentWeapon = self.weaponList[self.equippedWeapon]
@@ -223,75 +232,43 @@ class Player(object):
             self.bullets.append(PlayerRocket(self.sprite.x, self.sprite.y, self.sprite.batch, self.windowSize, self))
 
 
+class TileMapSection(object):
+    def __init__(self, data, width, value=None):
+        """
+        If value is specified, the random treasure-placer will place treasure to that value.
+        """
+        self.data = data
+        self.width = width
+        self.value = value
+
+        self.x = 0
+
+        self.boundingLine = boundingShapes.BoundingLine(self.x, self.width)
+
+        if self.value is not None:
+            self.generateTreasure()
+
+    def generateTreasure(self):
+        pass
+
+
 class TileMap(object):
-    def __init__(self, windowSize, batch):
+    def __init__(self, windowBox, batch):
         #The keys for the dictionary is the column number that you want to access.
         self.data = {}
 
-        self.tilesTypes = ["wood", "concrete", "metal", "dirt", "glass"]
-        self.tileChoices = {"dirt" : [], "wood" : [], "concrete" : [], "metal" : [], "glass" : []}
-
-        self.windowSize = windowSize
-        self.tileSize = 16
+        self.tileSize = 128
 
         self.batch = batch
 
-        self.tileChoices["dirt"].append("dirtBase1")
-        self.tileChoices["dirt"].append("grassTile1")
-
-        ##Removed - the resources have not yet been added
-        """
-        grassTile2 = pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "grassTile2.png"))
-        self.tileChoices["dirt"].append(grassTile2)
-
-        grassTile3 = pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "grassTile3.png"))
-        self.tileChoices["dirt"].append(grassTile3)
-        """
-
-        self.windowSize = windowSize
-        self.heightInTiles = int((self.windowSize.height / self.tileSize) + 2)
-        self.widthInTiles = int((self.windowSize.width / self.tileSize) + 2)
+        self.windowBox = windowBox
 
         self.scrollSpeed = 500
 
-        #populate the screen with tiles
-        for x in range(self.widthInTiles):
-            self.data[x] = {}
-            for y in range(self.heightInTiles):
-                ##self.data[x][y] = random.choice(self.tileChoices[random.choice(self.tilesTypes)])
-                self.data[x][y] = self.choiceParser(random.choice(self.tileChoices["dirt"]))
-                self.data[x][y].x = (x + 1) * self.tileSize
-                self.data[x][y].y = (y + 1) * self.tileSize
-
-    def choiceParser(self, choice):
-        resourceFilePath = "resources" + SEPARATOR
-
-        if choice == "grassTile1":
-            return pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "grassTile1.png"), batch=self.batch)
-
-        elif choice == "dirtBase1":
-            return pyglet.sprite.Sprite(pyglet.image.load(resourceFilePath + "dirtBase1.png"), batch=self.batch)
-
-    def addColumn(self):
-        newColumnNumber = max(self.data.keys()) + 1
-        self.data[newColumnNumber] = {}
-        for y in range(self.heightInTiles):
-            ##self.data[newColumnNumber][y] = random.choice(self.tileChoices[random.choice(self.tilesTypes)])
-            self.data[newColumnNumber][y] = self.choiceParser(random.choice(self.tileChoices["dirt"]))
-            self.data[newColumnNumber][y].x = (newColumnNumber + 1) * self.tileSize
-            self.data[newColumnNumber][y].y = (y + 1) * self.tileSize
-
     def update(self, dt):
-        for column in self.data.keys():
-            sprite = self.data[column][0]
-            if sprite.x + sprite.width / 2 < 0:
-                del self.data[column]
-                self.addColumn()
-
-            else:
-                moveValue = self.scrollSpeed * dt
-                for thing in self.data[column].values():
-                    thing.x -= moveValue
+        moveValue = self.scrollSpeed * dt
+        for tile in self.data.values():
+            tile.x -= moveValue
 
 
 class SoundQueue(object):

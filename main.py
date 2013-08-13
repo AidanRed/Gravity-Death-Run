@@ -1,6 +1,7 @@
 import pyglet
 import engine
 from libs import simpleLibrary
+from libs.boundingShapes import Rectangle
 
 
 def centreImage(image):
@@ -21,7 +22,10 @@ window.push_handlers(player1.key_handler)
 weaponLabel = pyglet.text.Label(color=(0, 255, 0, 255), batch=batch1)
 weaponLabel.text = player1.weaponList[player1.equippedWeapon]
 
-##tileMap = engine.TileMap(engine.Size(window.width, window.height), batch1)
+tileMap = engine.TileMap(Rectangle(window.width / 2, window.height / 2, window.width, window.height), batch1)
+
+backgroundColour = (0, 0.11993458956850283094850680009999999999999999, 0, 1.0)
+pyglet.gl.glClearColor(*backgroundColour)
 
 @window.event
 def on_draw():
@@ -34,7 +38,7 @@ def update(dt):
     if weaponLabel.text != player1.equippedWeapon:
         weaponLabel.text = player1.weaponList[player1.equippedWeapon]
 
-    #tileMap.update(dt)
+    ##tileMap.update(dt)
 
 
 pyglet.clock.schedule_interval(update, 1.0 / 120.0)

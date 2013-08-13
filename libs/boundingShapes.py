@@ -129,3 +129,50 @@ class Circle(object):
             return True
         else:
             return False
+
+
+class BoundingLine(object):
+    def __init__(self, middleX, width):
+        self.x = middleX
+        self.width = width
+        self.halfWidth = self.width / 2
+
+        self.rightPoint = Vector2(self.x + self.width, 0)
+        self.leftPoint = Vector2(self.x - self.width, 0)
+
+    def pointInside(self, point):
+        try:
+            point.id
+        except AttributeError:
+            point = Vector2(point[0], point[1])
+
+        if point.x < self.x + self.halfWidth and point.x > self.x - self.halfWidth:
+            return True
+        else:
+            return False
+
+    def intersection(self, otherLine):
+        """
+        Returns intersection between self and another bounding line as a bounding line
+        """
+        if otherLine.pointInside(self.leftPoint):
+            theWidth = otherLine.rightPoint.x - self.leftPoint.x
+            return BoundingLine(self.leftPoint.x + theWidth / 2, theWidth)
+
+        elif otherLine.pointInside(self.rightPoint):
+            theWidth = self.rightPoint.x - otherLine.leftPoint.x
+            return BoundingLine(otherLine.leftPoint.x + theWidth / 2, theWidth)
+
+        elif self.leftPoint.x <= otherLine.leftPoint.x and self.rightPoint.x >= otherLine.rightPoint.x:
+            return BoundingLine(otherLine.x, otherLine.width)
+
+        else:
+            return False
+
+    def rectangleIntersection(self, rectangle):
+        """
+        returns the intersection between self and a rectangle as a bounding line
+        """
+        rectangleLine = BoundingLine(rectangle.bottomRight.x - rectangle.width / 2, rectangle.width)
+
+        return self.intersection(rectangleLine)
