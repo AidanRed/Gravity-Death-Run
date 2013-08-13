@@ -38,6 +38,8 @@ class Grid(object):
                 pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.x,i*self.ySpacing,
                     2*(self.x+self.gridWidth),i*self.ySpacing)))
 
+
+
 width = 640
 height = 480
 window = pyglet.window.Window(width, height)
