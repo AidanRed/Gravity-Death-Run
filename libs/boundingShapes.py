@@ -17,8 +17,11 @@ class Rectangle(object):
         self.width = width
         self.height = height
 
-        self.topLeft = Vector2(self.x - self.width, self.y + self.height)
-        self.bottomRight = Vector2(self.x + self.width, self.y - self.height)
+        self.halfWidth = width / 2
+        self.halfHeight = height / 2
+
+        self.topLeft = Vector2(self.x - self.halfWidth, self.y + self.halfHeight)
+        self.bottomRight = Vector2(self.x + self.halfWidth, self.y - self.halfHeight)
 
     def pointInside(self, point):
         try:
