@@ -214,8 +214,8 @@ class Player(object):
 
         if self.key_handler[key.UP]:
             self.velocity.y += self.jetpackPower
-            self.rocketSprite.x = self.x - self.width / 2 - 5
-            self.rocketSprite.y = self.y - self.rocketSprite.height / 2
+            ##self.rocketSprite.x = self.x - self.width / 2 - 5
+            ##self.rocketSprite.y = self.y - self.rocketSprite.height / 2
 
         if self.key_handler[key.DOWN]:
             self.velocity.y -= self.jetpackPower
