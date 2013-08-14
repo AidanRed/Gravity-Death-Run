@@ -50,6 +50,23 @@ sectionWidth = width
 sectionHeight = 320
 glColor4f(255,4,6,2)
 
+buttonColour1 = (0,55,255)
+buttonColour2 = (0,105,255)
+
+#List of all objects
+objectList = []
+
+#def __init__(self, text, colour, colour2, colour3, colour4, colourPressed, colourPressed2, colourPressed3,
+# colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, font=None, fontSize=10,
+# bold=False, italic=False)
+#GUI objects
+GUILeftButtons = []
+GUILeftButtons.append(TextButton("Terrain",buttonColour1,buttonColour1,buttonColour1,buttonColour1,buttonColour2,
+                                 buttonColour2,buttonColour2,buttonColour2,(0,0,0),(0,0,0),128,64,(64,95),(10,-32)))
+GUILeftButtons.append(TextButton("Enemies",buttonColour1,buttonColour1,buttonColour1,buttonColour1,buttonColour2,
+                                 buttonColour2,buttonColour2,buttonColour2,(0,0,0),(0,0,0),128,64,(64,95-64),(10,-32)))
+
+
 selectionBar = DrawableRectangle(0,0,128,width,(60,50,40))
 glClearColor(0.06,0.04,0.5,1)
 grid = Grid(32,32,sectionWidth,sectionHeight)
@@ -58,6 +75,8 @@ def on_draw():
     window.clear()
     selectionBar.draw()
     grid.draw()
+    for button in GUILeftButtons:
+        button.draw()
 
 
 
