@@ -5,6 +5,9 @@ from libs.gui import TextButton
 from pyglet.gl import *
 
 class DrawableRectangle(object):
+    """
+    Simple class for drawing quads with opengl
+    """
     def __init__(self,x,y,height,width,colour):
         self.x = x
         self.y = y

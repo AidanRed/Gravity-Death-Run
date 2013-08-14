@@ -248,9 +248,6 @@ class Vector2(object):
 
         otherVector: The other vector to test against
         """
-
-        #Needed help in adapting actionscript code. Looked at: http://stackoverflow.com/questions/2595392/what-do
-        #es-the-question-mark-and-the-colon-ternary-operator-mean-in-objectiv
         dot = self.perpendicular().dotProduct(otherVector)
 
         if dot < 0:
@@ -420,12 +417,11 @@ def test():
     pyglet.app.run()
 
 
-def testProjection():
-    vector1 = Vector2(38, 64)
-    vector2 = Vector2(50, 0)
-
+def testProjection(vector1=Vector2(38, 64), vector2=Vector2(50, 0)):
     theProjection = vector1.projection(vector2)
     print theProjection
 
     print "x: " + str(theProjection.x)
     print "y: " + str(theProjection.y)
+
+testProjection()

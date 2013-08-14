@@ -233,7 +233,7 @@ class Player(object):
 
 
 class TileMapSection(object):
-    def __init__(self, data, width, value=None):
+    def __init__(self, data, width, windowSize, value=None):
         """
         If value is specified, the random treasure-placer will place treasure to that value.
         """
@@ -241,7 +241,7 @@ class TileMapSection(object):
         self.width = width
         self.value = value
 
-        self.x = 0
+        self.x = windowSize.width + self.width / 2
 
         self.boundingLine = boundingShapes.BoundingLine(self.x, self.width)
 
@@ -256,6 +256,7 @@ class TileMap(object):
     def __init__(self, windowBox, batch):
         #The keys for the dictionary is the column number that you want to access.
         self.data = {}
+        self.sectionChoices = []
 
         self.tileSize = 128
 
@@ -266,9 +267,17 @@ class TileMap(object):
         self.scrollSpeed = 500
 
     def update(self, dt):
-        moveValue = self.scrollSpeed * dt
-        for tile in self.data.values():
-            tile.x -= moveValue
+        for section in self.data.keys():
+            #Test if the section has gone off the screen
+            if self.data[section]["boundingLine"].right.x < 0:
+                del self.data[section]
+                #Now randomly choose a new section
+                self.data[len(self.data.keys()) + 1] = random.choice(self.sectionChoices)
+
+            else:
+                moveValue = self.scrollSpeed * dt
+                for tile in self.data[section]:
+                    tile.x -= moveValue
 
 
 class SoundQueue(object):
