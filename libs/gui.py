@@ -38,7 +38,10 @@ class Button(object):
 
 
 class TextButton(object):
-    def __init__(self, text, colour, colour2, colour3, colour4, colourPressed, colourPressed2, colourPressed3, colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, font=None, fontSize=10, bold=False, italic=False):
+    def __init__(self, text, colour, colour2, colour3, colour4, colourPressed, colourPressed2, colourPressed3,
+                 colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, border=None,
+                 borderPressed=None, font=None, fontSize=10, bold=False, italic=False):
+
         if len(colour) == 3:
             colour = (colour[0], colour[1], colour[2], 255)
 
@@ -89,6 +92,9 @@ class TextButton(object):
 
         self.filled = filled
 
+        self.border = border
+        self.borderPressed = borderPressed
+
         self.pressed = False
 
     def setText(self, text):
@@ -128,6 +134,25 @@ class TextButton(object):
                                                                    int(self.colourPressed2[0]), int(self.colourPressed2[1]), int(self.colourPressed2[2]),
                                                                    int(self.colourPressed3[0]), int(self.colourPressed3[1]), int(self.colourPressed3[2]),
                                                                    int(self.colourPressed4[0]), int(self.colourPressed4[1]), int(self.colourPressed4[2]),)))
+
+            if self.border != None:
+                if self.pressed:
+                    pyglet.gl.glColor4f(*self.borderPressed)
+                else:
+                    pyglet.gl.glColor4f(*self.border)
+
+                pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (int(self.rectangle.topLeft.x), int(self.rectangle.topLeft.y),
+                                                                     int(self.rectangle.bottomRight.x), int(self.rectangle.topLeft.y))))
+
+                pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (int(self.rectangle.bottomRight.x), int(self.rectangle.topLeft.y),
+                                                                     int(self.rectangle.bottomRight.x), int(self.rectangle.bottomRight.y))))
+
+                pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (int(self.rectangle.bottomRight.x), int(self.rectangle.bottomRight.y),
+                                                                     int(self.rectangle.topLeft.x), int(self.rectangle.bottomRight.y))))
+
+                pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (int(self.rectangle.topLeft.x), int(self.rectangle.bottomRight.y),
+                                                                     int(self.rectangle.topLeft.x), int(self.rectangle.topLeft.y))))
+
 
 
         else:
