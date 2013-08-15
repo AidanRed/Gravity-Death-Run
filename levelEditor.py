@@ -3,6 +3,9 @@ from libs import simpleLibrary
 from libs import boundingShapes
 from libs.gui import TextButton
 from pyglet.gl import *
+from libs.simpleLibrary import SEPARATOR
+
+RESOURCEPATH = "resources" + SEPARATOR + "terrain" + SEPARATOR
 
 class DrawableRectangle(object):
     """
@@ -41,6 +44,26 @@ class Grid(object):
                 pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.x,i*self.ySpacing,
                     2*(self.x+self.gridWidth),i*self.ySpacing)))
 
+dirtBaseBig1 = pyglet.image.load(RESOURCEPATH + "dirtBaseBig1.png")
+drawBatch = pyglet.graphics.Batch()
+background = pyglet.graphics.OrderedGroup(0)
+foreground = pyglet.graphics.OrderedGroup(1)
+
+class terrain(object):
+    def __init__(self,img,x,y):
+        self.spr = pyglet.sprite.Sprite(img,x=x,y=y,batch=drawBatch,group=foreground)
+        self.img = img
+        self.rect = boundingShapes.Rectangle((x+(img.width/2),y+(img.height/2)),img.width,img.height)
+
+    def mouseCollide(self,mouseX,mouseY):
+        self.rect = boundingShapes.Rectangle((self.spr.x+(self.img.width/2),self.spr.y+(self.img.height/2)),
+                                             self.img.width,self.img.height)
+        return self.rect.pointInside((mouseX,mouseY))
+
+
+
+objects = []
+objects.append(terrain(dirtBaseBig1, 444, 444))
 
 
 width = 640
@@ -73,10 +96,21 @@ grid = Grid(32,32,sectionWidth,sectionHeight)
 @window.event
 def on_draw():
     window.clear()
+    drawBatch.draw()
     selectionBar.draw()
+
     grid.draw()
+
     for button in GUILeftButtons:
         button.draw()
+
+@window.event
+def on_mouse_motion(x,y,dx,dy):
+    if objects[0].mouseCollide(x,y):
+        objects[0].spr.image.anchor_x = x-objects[0].spr.y
+        objects[0].spr.image.anchor_y = y-objects[0].spr.y
+        objects[0].spr.x = x
+        objects[0].spr.y = y
 
 
 
