@@ -171,7 +171,11 @@ class TextButton(object):
         self.label.draw()
 
 
+class Slider(object):
+    def __init__(self, length, xy):
+        self.length = length
+        self.leftPoint
+        self.rightPoint
 
-
-
+    def draw(self):
 
