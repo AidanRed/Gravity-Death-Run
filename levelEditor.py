@@ -42,6 +42,7 @@ class Grid(object):
 
 
     def draw(self):
+        pyglet.gl.glColor4f(1, 1, 1, 1)
         for i in range(2 * self.gridWidth / self.xSpacing):
             pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (i * self.xSpacing, self.y,
                                                                  i * self.xSpacing, self.y + self.gridHeight)))
@@ -51,17 +52,22 @@ class Grid(object):
                                                                      2 * (self.x + self.gridWidth), i * self.ySpacing)))
 
 
-dirtBaseBig1 = pyglet.image.load(RESOURCEPATH + "dirtBaseBig1.png")
-drawBatch = pyglet.graphics.Batch()
+dirtBase1 = pyglet.image.load(RESOURCEPATH + "dirtBase1.png")
+
+batch1 = pyglet.graphics.Batch()
 background = pyglet.graphics.OrderedGroup(0)
 foreground = pyglet.graphics.OrderedGroup(1)
 
 
 class Terrain(object):
     def __init__(self, img, x, y):
-        self.spr = pyglet.sprite.Sprite(img, x=x, y=y, batch=drawBatch, group=foreground)
+        self.spr = pyglet.sprite.Sprite(img, x=x, y=y, batch=batch1, group=foreground)
         self.img = img
-        self.rect = boundingShapes.Rectangle((x + (img.width / 2), y + (img.height / 2)), img.width, img.height)
+        
+        self.width = self.img.width
+        self.height = self.img.height
+
+        self.rect = boundingShapes.Rectangle((x + (img.width / 2), y + (img.height / 2)), self.width, self.height)
         self.selected = False
 
     def mouseCollide(self, mouseX, mouseY):
@@ -74,7 +80,7 @@ class Terrain(object):
         self.rect = boundingShapes.Rectangle((self.spr.x + (self.img.width / 2), self.spr.y + (self.img.height / 2)),
                                              self.img.width, self.img.height)
 
-        if self.mousePressed:
+        if mousePressed:
             if not self.selected:
                 if self.rect.pointInside((mouseX, mouseY)):
                     self.selected = True
@@ -83,16 +89,10 @@ class Terrain(object):
                 self.selected = False
 
 
-        if not self.pressed:
-            self.x = mouseX + self.width / 2
-            self.y = mouseY + self.width / 2
+        if self.selected:
+            self.spr.x = mouseX - self.width / 2
+            self.spr.y = mouseY - self.height / 2
 
-
-
-
-
-objects = []
-objects.append(Terrain(dirtBaseBig1, 444, 444))
 
 width = 640
 height = 480
@@ -104,33 +104,27 @@ glColor4f(255, 4, 6, 2)
 buttonColour1 = (0, 55, 255)
 buttonColour2 = (0, 105, 255)
 
-#List of all objects
-objectList = []
-
-#def __init__(self, text, colour, colour2, colour3, colour4, colourPressed, colourPressed2, colourPressed3,
-# colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, font=None, fontSize=10,
-# bold=False, italic=False)
-#GUI objects
 GUILeftButtons = []
 GUILeftButtons.append(TextButton("Terrain", buttonColour1, buttonColour1, buttonColour1, buttonColour1, buttonColour2,
                                  buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 128, 64, (64, 95),
-                                 (10, -32)))
+                                 (23, 16), border=(0, 1, 0, 1)))
 GUILeftButtons.append(TextButton("Enemies", buttonColour1, buttonColour1, buttonColour1, buttonColour1, buttonColour2,
                                  buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 128, 64,
-                                 (64, 95 - 64), (10, -32)))
+                                 (64, 95 - 64), (23, 16), border=(0, 1, 0, 1)))
 
 selectionBar = DrawableRectangle(0, 0, 128, width, (60, 50, 40))
 glClearColor(0.06, 0.04, 0.5, 1)
 grid = Grid(32, 32, sectionWidth, sectionHeight)
 
+objects = []
+objects.append(Terrain(dirtBase1, window.width / 2, window.height / 2))
 
 @window.event
 def on_draw():
     window.clear()
-    drawBatch.draw()
-    selectionBar.draw()
-
     grid.draw()
+    batch1.draw()
+    selectionBar.draw()
 
     for button in GUILeftButtons:
         button.draw()
@@ -138,10 +132,11 @@ def on_draw():
 
 @window.event
 def on_mouse_press(x, y, button, modifiers):
-    objects[0].update(x,y,mousePressed=True)
+    if button == pyglet.window.mouse.LEFT:
+        objects[0].update(x, y, mousePressed=True)
 
-
+@window.event
 def on_mouse_motion(x, y, dx, dy):
-    objects[0].update(x,y)
+    objects[0].update(x, y)
 
 pyglet.app.run()
