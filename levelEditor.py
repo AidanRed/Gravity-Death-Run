@@ -1,11 +1,15 @@
 import pyglet
-from libs import simpleLibrary
 from libs import boundingShapes
 from libs.gui import TextButton
 from pyglet.gl import *
 from libs.simpleLibrary import SEPARATOR
+from libs.vectors import Vector2
 
 RESOURCEPATH = "resources" + SEPARATOR + "terrain" + SEPARATOR
+
+
+def snapToGrid(point, gridSize):
+    return gridSize * round(point.x/gridSize), gridSize * round(point.y/gridSize)
 
 
 class DrawableRectangle(object):
@@ -88,10 +92,8 @@ class Terrain(object):
             else:
                 self.selected = False
 
-
         if self.selected:
-            self.spr.x = mouseX - self.width / 2
-            self.spr.y = mouseY - self.height / 2
+            self.spr.x, self.spr.y = snapToGrid(Vector2(mouseX - self.width / 2, mouseY - self.height / 2), self.width)
 
 
 width = 640
