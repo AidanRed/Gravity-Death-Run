@@ -423,5 +423,3 @@ def testProjection(vector1=Vector2(38, 64), vector2=Vector2(50, 0)):
 
     print "x: " + str(theProjection.x)
     print "y: " + str(theProjection.y)
-
-testProjection()

@@ -1,5 +1,8 @@
 from boundingShapes import Rectangle as Rect
+from boundingShapes import Circle
 import pyglet
+from simpleLibrary import SEPARATOR
+from vectors import Vector2
 
 
 class Button(object):
@@ -172,10 +175,86 @@ class TextButton(object):
 
 
 class Slider(object):
-    def __init__(self, length, xy):
-        self.length = length
-        self.leftPoint
-        self.rightPoint
+    def __init__(self, leftPoint, rightPoint, startingValue, maxValue, minValue, batch, colour=(0, 0, 255, 255)):
+        try:
+            leftPoint.id
+            rightPoint.id
+
+            self.leftPoint = leftPoint
+            self.rightPoint = rightPoint
+
+        except AttributeError:
+            self.leftPoint = Vector2(leftPoint[0], leftPoint[1])
+            self.rightPoint = Vector2(rightPoint[0], rightPoint[1])
+
+        assert startingValue <= maxValue and startingValue >= minValue
+
+        self.length = self.rightPoint.x - self.leftPoint.x
+
+        self.maxValue = maxValue
+        self.minValue = minValue
+
+        self.currentValue = startingValue
+        sliderImage = pyglet.image.load("../resources" + SEPARATOR + "gui" + SEPARATOR + "sliderHandle.png")
+        sliderImage.anchor_y = sliderImage.height / 2
+        sliderImage.anchor_x = sliderImage.width / 2
+
+        self.sliderHandle = pyglet.sprite.Sprite(sliderImage, batch=batch)
+        self.sliderHandle.x = self.leftPoint.x + startingValue
+        self.sliderHandle.y = self.leftPoint.y
+
+        self.colour = colour
+
+        self.boundingCircle = Circle((self.sliderHandle.x, self.sliderHandle.y), sliderImage.width / 2)
+
+        self.beingPressed = False
 
     def draw(self):
+        pyglet.gl.glColor4f(*self.colour)
+        pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (int(self.leftPoint.x), int(self.leftPoint.y), int(self.rightPoint.x), int(self.rightPoint.y))))
 
+    def checkPressed(self, mouseX, mouseY):
+        if self.boundingCircle.pointInside((mouseX, mouseY)):
+            self.beingPressed = True
+
+    def update(self, mouseX, mouseY):
+        if self.beingPressed:
+            if mouseX > self.rightPoint.x:
+                self.sliderHandle.x = self.rightPoint.x
+
+            elif mouseX < self.leftPoint.x:
+                self.sliderHandle.x = self.leftPoint.x
+
+            else:
+                self.sliderHandle.x = mouseX
+
+
+def test():
+    window = pyglet.window.Window(640, 480)
+
+    batch1 = pyglet.graphics.Batch()
+
+    slider = Slider((20, 240), (120, 240), 1, 100, 1, batch1)
+
+    @window.event
+    def on_draw():
+        window.clear()
+        slider.draw()
+        batch1.draw()
+
+
+    @window.event
+    def on_mouse_drag(x, y, dx, dy, buttons, modifiers):
+        if (buttons & pyglet.window.mouse.LEFT) and not slider.beingPressed:
+            slider.checkPressed(x, y)
+
+        if (buttons & pyglet.window.mouse.LEFT) and slider.beingPressed:
+            slider.update(x, y)
+
+    @window.event
+    def on_mouse_release(x, y, button, modifiers):
+        if button == pyglet.window.mouse.LEFT and slider.beingPressed:
+            slider.beingPressed = False
+
+
+    pyglet.app.run()
