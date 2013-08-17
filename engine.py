@@ -136,12 +136,17 @@ class Player(object):
         self.spriteHidingPlace = Vector2(-100, -100)
 
         flameImage = pyglet.image.load("resources" + SEPARATOR + "flame1.png")
+        flameImage.anchor_x = flameImage.width / 2
+        flameImage.anchor_y = flameImage.height / 2
+
         self.rocketSprite = pyglet.sprite.Sprite(flameImage, x=self.spriteHidingPlace.x,
                                                  y=self.spriteHidingPlace.y, batch=batch)
 
         self.invertedRocketSprite = pyglet.sprite.Sprite(flameImage, x=self.spriteHidingPlace.x,
                                                          y=self.spriteHidingPlace.y, batch=batch)
         self.invertedRocketSprite.rotation = 180
+
+
 
 
     def update(self, dt):
@@ -214,11 +219,21 @@ class Player(object):
 
         if self.key_handler[key.UP]:
             self.velocity.y += self.jetpackPower
-            ##self.rocketSprite.x = self.x - self.width / 2 - 5
-            ##self.rocketSprite.y = self.y - self.rocketSprite.height / 2
+            self.rocketSprite.x = self.sprite.x
+            self.rocketSprite.y = self.sprite.y - self.halfHeight - (self.rocketSprite.height / 2)
+
+        else:
+            self.rocketSprite.x = self.spriteHidingPlace.x
+            self.rocketSprite.y = self.spriteHidingPlace.y
 
         if self.key_handler[key.DOWN]:
             self.velocity.y -= self.jetpackPower
+            self.invertedRocketSprite.x = self.sprite.x
+            self.invertedRocketSprite.y = self.sprite.y + self.halfHeight + (self.invertedRocketSprite.height / 2)
+
+        else:
+            self.invertedRocketSprite.x = self.spriteHidingPlace.x
+            self.invertedRocketSprite.y = self.spriteHidingPlace.y
 
     def fire(self):
         currentWeapon = self.weaponList[self.equippedWeapon]
