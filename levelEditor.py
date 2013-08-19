@@ -96,6 +96,28 @@ class Terrain(object):
             self.spr.x, self.spr.y = snapToGrid(Vector2(mouseX - self.width / 2, mouseY - self.height / 2), self.width)
 
 
+class BackgroundStrip(object):
+    def __init__(self, colour, x, y, width, height):
+        self.colour = colour
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def draw(self, offset):
+        if offset == 1:
+            offset = tileWidth
+        else:
+            offset = 0
+
+        pyglet.graphics.draw(4, GL_QUADS, ('v2i', (
+            self.x + offset, self.y + self.height, self.x + self.width + offset, self.y + self.height, self.x + self.width + offset, self.y,
+            self.x + offset, self.y)), ('c3B', (int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                                        int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                                        int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),
+                                        int(self.colour[0]), int(self.colour[1]), int(self.colour[2]),)))
+
+
 width = 640
 height = 480
 window = pyglet.window.Window(width, height)
@@ -114,6 +136,9 @@ GUILeftButtons.append(TextButton("Enemies", buttonColour1, buttonColour1, button
                                  buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 128, 64,
                                  (64, 95 - 64), (23, 16), border=(0, 1, 0, 1)))
 
+tileWidth = 32
+tileHeight = 32
+
 selectionBar = DrawableRectangle(0, 0, 128, width, (60, 50, 40))
 glClearColor(0.06, 0.04, 0.5, 1)
 grid = Grid(32, 32, sectionWidth, sectionHeight)
@@ -121,9 +146,28 @@ grid = Grid(32, 32, sectionWidth, sectionHeight)
 objects = []
 objects.append(Terrain(dirtBase1, window.width / 2, window.height / 2))
 
+backgroundStrips = []
+
+stripColour = ()
+
+previousX = -(tileWidth * 2)
+step = tileWidth * 2
+for i in range(int((window.width / tileWidth) / 2)):
+    backgroundStrips.append(BackgroundStrip((0.06, 0.04, 0.5, 1),previousX + step, 0, tileWidth, window.height))
+    previousX += step
+
+#backStripOffset can either be 0 or 1.
+backStripOffset = 0
+
+#xOffset is in tiles, not pixels
+xOffset = 0
+
 @window.event
 def on_draw():
     window.clear()
+    for backStrip in backgroundStrips:
+        backStrip.draw(backStripOffset)
+
     grid.draw()
     batch1.draw()
     selectionBar.draw()
@@ -140,5 +184,23 @@ def on_mouse_press(x, y, button, modifiers):
 @window.event
 def on_mouse_motion(x, y, dx, dy):
     objects[0].update(x, y)
+
+@window.event
+def on_key_press(symbol, modifiers):
+    global xOffset, objects, backStripOffset
+
+    if symbol == pyglet.window.key.LEFT:
+        if xOffset > 0:
+            xOffset -= 1
+
+            for tile in objects:
+                tile.spr.x += tileWidth
+
+    elif symbol == pyglet.window.key.RIGHT:
+        xOffset += 1
+        for tile in objects:
+            tile.spr.x -= tileWidth
+
+    backStripOffset = xOffset % 2
 
 pyglet.app.run()

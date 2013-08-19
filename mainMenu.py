@@ -61,8 +61,9 @@ def changeSetting(filename,key,val):
 
 def readSetting(filename,key):
     shelf = shelve.open(filename)
+    setting = shelf[key]
     shelf.close()
-    return shelf[key]
+    return setting
 
 
 
