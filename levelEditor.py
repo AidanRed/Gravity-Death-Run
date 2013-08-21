@@ -119,7 +119,7 @@ class BackgroundStrip(object):
 
 
 width = 640
-height = 480
+height = (480+128)
 window = pyglet.window.Window(width, height)
 sectionWidth = width
 sectionHeight = 320
@@ -135,6 +135,11 @@ GUILeftButtons.append(TextButton("Terrain", buttonColour1, buttonColour1, button
 GUILeftButtons.append(TextButton("Enemies", buttonColour1, buttonColour1, buttonColour1, buttonColour1, buttonColour2,
                                  buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 128, 64,
                                  (64, 95 - 64), (23, 16), border=(0, 1, 0, 1)))
+
+GUITerrainButtons = []
+GUITerrainButtons.append(TextButton("Dirt?", buttonColour1, buttonColour1, buttonColour1, buttonColour1, buttonColour2,
+                                 buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 128, 64, (512, 95),
+                                 (23, 16), border=(0, 1, 0, 1), borderPressed=(0, 1, 0, 1)))
 
 tileWidth = 32
 tileHeight = 32
@@ -169,21 +174,36 @@ def on_draw():
         backStrip.draw(backStripOffset)
 
     grid.draw()
-    batch1.draw()
+
     selectionBar.draw()
 
     for button in GUILeftButtons:
         button.draw()
+    for button in GUITerrainButtons:
+        button.draw()
+    batch1.draw()
 
 
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     if button == pyglet.window.mouse.LEFT:
-        objects[0].update(x, y, mousePressed=True)
+        for object in objects:
+            object.update(x, y, mousePressed=True)
+        for GUIbutton in GUITerrainButtons:
+            if GUIbutton.update(x, y):
+                tempVar = 0
+                for object in objects:
+                    if object.selected == True:
+                        tempVar = 1
+                if tempVar == 0:
+                    newObj = Terrain(dirtBase1, window.width / -2, window.height / -2)
+                    newObj.selected = True
+                    objects.append(newObj)
 
 @window.event
 def on_mouse_motion(x, y, dx, dy):
-    objects[0].update(x, y)
+    for object in objects:
+        object.update(x, y)
 
 @window.event
 def on_key_press(symbol, modifiers):

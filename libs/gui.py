@@ -45,6 +45,8 @@ class TextButton(object):
                  colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, border=None,
                  borderPressed=None, font=None, fontSize=10, bold=False, italic=False):
 
+#        assert (border is None and borderPressed is None) or (border is not None and borderPressed is not None)
+
         if len(colour) == 3:
             colour = (colour[0], colour[1], colour[2], 255)
 
