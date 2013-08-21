@@ -281,6 +281,8 @@ class TileMap(object):
 
         self.scrollSpeed = 500
 
+
+
     def update(self, dt):
         for section in self.data.keys():
             #Test if the section has gone off the screen

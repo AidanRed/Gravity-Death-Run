@@ -24,7 +24,7 @@ weaponLabel.text = player1.weaponList[player1.equippedWeapon]
 
 tileMap = engine.TileMap(Rectangle((window.width / 2, window.height / 2), window.width, window.height), batch1)
 
-backgroundColour = (0, 0.11993458956850283094850680009999999999999999, 0, 1.0)
+backgroundColour = (0, 0.1199345895685028309485068000999999999999999999999999999999999999999999999999999999999, 0, 1.0)
 pyglet.gl.glClearColor(*backgroundColour)
 
 @window.event
@@ -39,6 +39,7 @@ def update(dt):
         weaponLabel.text = player1.weaponList[player1.equippedWeapon]
 
     ##tileMap.update(dt)
+
 
 
 pyglet.clock.schedule_interval(update, 1.0 / 120.0)

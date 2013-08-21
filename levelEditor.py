@@ -1,4 +1,5 @@
 import pyglet
+import shelve
 from libs import boundingShapes
 from libs.gui import TextButton
 from pyglet.gl import *
@@ -166,6 +167,25 @@ backStripOffset = 0
 
 #xOffset is in tiles, not pixels
 xOffset = 0
+
+
+def save():
+    for tile in objects:
+        assert not tile.selected
+        #First remove the offset
+        tile.spr.x -= xOffset * tileWidth
+
+        #Now save it in a shelve
+        saveFile = shelve.open("sections.dat")
+        try:
+            newKey = max(saveFile.keys()) + 1
+
+        except ValueError:
+            #There are currently no sections
+            newKey = 1
+
+
+
 
 @window.event
 def on_draw():
