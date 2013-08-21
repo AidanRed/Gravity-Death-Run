@@ -43,7 +43,7 @@ class Button(object):
 class TextButton(object):
     def __init__(self, text, colour, colour2, colour3, colour4, colourPressed, colourPressed2, colourPressed3,
                  colourPressed4, textColour, textColourPressed, width, height, xy, padding, filled=True, border=None,
-                 borderPressed=None, font=None, fontSize=10, bold=False, italic=False):
+                 borderPressed=None, font=None, fontSize=10, bold=False, italic=False, image=None):
 
 #        assert (border is None and borderPressed is None) or (border is not None and borderPressed is not None)
 
@@ -99,6 +99,8 @@ class TextButton(object):
 
         self.border = border
         self.borderPressed = borderPressed
+
+        self.image = image
 
         self.pressed = False
 
@@ -172,6 +174,9 @@ class TextButton(object):
 
             pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (int(self.rectangle.topLeft.x), int(self.rectangle.bottomRight.y),
                                                                  int(self.rectangle.topLeft.x), int(self.rectangle.topLeft.y))))
+        if self.image is not None:
+            pyglet.gl.glColor4f(1, 1, 1, 1)
+            self.image.blit(self.rectangle.x - self.image.width / 2, self.rectangle.y - self.image.height / 2)
 
         self.label.draw()
 

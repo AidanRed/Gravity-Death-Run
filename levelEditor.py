@@ -63,9 +63,16 @@ batch1 = pyglet.graphics.Batch()
 background = pyglet.graphics.OrderedGroup(0)
 foreground = pyglet.graphics.OrderedGroup(1)
 
+prevID = 0
+
 
 class Terrain(object):
     def __init__(self, img, x, y):
+        global prevID
+
+        self.id = prevID + 1
+        prevID += 1
+
         self.spr = pyglet.sprite.Sprite(img, x=x, y=y, batch=batch1, group=foreground)
         self.img = img
         
@@ -91,7 +98,8 @@ class Terrain(object):
                     self.selected = True
 
             else:
-                self.selected = False
+                if self.spr.y > 128:
+                    self.selected = False
 
         if self.selected:
             self.spr.x, self.spr.y = snapToGrid(Vector2(mouseX - self.width / 2, mouseY - self.height / 2), self.width)
@@ -123,7 +131,7 @@ width = 640
 height = (480+128)
 window = pyglet.window.Window(width, height)
 sectionWidth = width
-sectionHeight = 320
+sectionHeight = 448
 glColor4f(255, 4, 6, 2)
 
 buttonColour1 = (0, 55, 255)
@@ -138,9 +146,10 @@ GUILeftButtons.append(TextButton("Enemies", buttonColour1, buttonColour1, button
                                  (64, 95 - 64), (23, 16), border=(0, 1, 0, 1)))
 
 GUITerrainButtons = []
-GUITerrainButtons.append(TextButton("Dirt?", buttonColour1, buttonColour1, buttonColour1, buttonColour1, buttonColour2,
-                                 buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 128, 64, (512, 95),
-                                 (23, 16), border=(0, 1, 0, 1), borderPressed=(0, 1, 0, 1)))
+
+GUITerrainButtons.append(TextButton("", buttonColour1, buttonColour1, buttonColour1, buttonColour1, buttonColour2,
+                                 buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 64, 64, (160, 96),
+                                 (23, 16), border=(0, 1, 0, 1), borderPressed=(0, 1, 0, 1), image=dirtBase1))
 
 tileWidth = 32
 tileHeight = 32
@@ -150,7 +159,6 @@ glClearColor(0.06, 0.04, 0.5, 1)
 grid = Grid(32, 32, sectionWidth, sectionHeight)
 
 objects = []
-objects.append(Terrain(dirtBase1, window.width / 2, window.height / 2))
 
 backgroundStrips = []
 
@@ -169,6 +177,38 @@ backStripOffset = 0
 xOffset = 0
 
 
+class TerrainHolder(object):
+    def __init__(self, tileWidth, tileHeight):
+        self.data = {}
+        for x in range(window.width / tileWidth):
+            self.data[x] = {}
+            for y in range(window.height - 128 / tileHeight):
+                self.data[x][y] = None
+
+        self.tileWidth = tileWidth
+        self.tileHeight = tileHeight
+
+    def placeTile(self, tile, gridX, gridY):
+        tile.x = gridX * tileWidth
+        tile.y = (gridY * tileHeight) + 128
+
+        self.data[gridX][gridY] = tile
+
+    def addColumn(self):
+        self.data[max(self.data.keys())] = {}
+
+    def moveTile(self, startPos, endPos):
+        theTile = self.data[startPos[0]][startPos[1]]
+        self.data[endPos[0]][endPos[1]] = theTile
+
+        del self.data[startPos[0]][startPos[1]]
+
+    def deleteTile(self, gridX, gridY):
+        self.data[gridX][gridY] = None
+
+terrainMap = TerrainHolder(tileWidth, tileHeight)
+
+
 def save():
     for tile in objects:
         assert not tile.selected
@@ -185,6 +225,8 @@ def save():
             newKey = 1
 
 
+def coordinatesToGrid(x, y):
+    return x / tileWidth, (y - 128) / tileHeight
 
 
 @window.event
@@ -207,23 +249,45 @@ def on_draw():
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     if button == pyglet.window.mouse.LEFT:
-        for object in objects:
-            object.update(x, y, mousePressed=True)
+        for object1 in objects:
+            firstSelected = object1.selected
+            object1.update(x, y, mousePressed=True)
+            if firstSelected:
+                gridX, gridY = coordinatesToGrid(object1.spr.x, object1.spr.y)
+                if gridX >= 0 and gridY >= 0:
+                    terrainMap.placeTile(object1, gridX, gridY)
+
+
         for GUIbutton in GUITerrainButtons:
             if GUIbutton.update(x, y):
                 tempVar = 0
-                for object in objects:
-                    if object.selected == True:
+                for object1 in objects:
+                    if object1.selected:
                         tempVar = 1
+
                 if tempVar == 0:
                     newObj = Terrain(dirtBase1, window.width / -2, window.height / -2)
                     newObj.selected = True
                     objects.append(newObj)
 
+    if button == pyglet.window.mouse.RIGHT:
+        gridX, gridY = coordinatesToGrid(x, y)
+        if not (gridX < 0 or gridY < 0):
+            print terrainMap.data[gridX][gridY]
+            if terrainMap.data[gridX][gridY] is not None:
+                theTileID = terrainMap.data[gridX][gridY].id
+                terrainMap.deleteTile(gridX, gridY)
+                print terrainMap.data[gridX][gridY]
+
+                for index, value in enumerate(objects):
+                    if value.id == theTileID:
+                        del objects[index]
+
+
 @window.event
 def on_mouse_motion(x, y, dx, dy):
-    for object in objects:
-        object.update(x, y)
+    for object1 in objects:
+        object1.update(x, y)
 
 @window.event
 def on_key_press(symbol, modifiers):
@@ -238,6 +302,7 @@ def on_key_press(symbol, modifiers):
 
     elif symbol == pyglet.window.key.RIGHT:
         xOffset += 1
+        terrainMap.addColumn()
         for tile in objects:
             tile.spr.x -= tileWidth
 
