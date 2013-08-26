@@ -151,6 +151,10 @@ GUITerrainButtons.append(TextButton("", buttonColour1, buttonColour1, buttonColo
                                  buttonColour2, buttonColour2, buttonColour2, (0, 0, 0), (0, 0, 0), 64, 64, (160, 96),
                                  (23, 16), border=(0, 1, 0, 1), borderPressed=(0, 1, 0, 1), image=dirtBase1))
 
+SaveButton = TextButton("Save", buttonColour1, buttonColour1, buttonColour1, buttonColour1, buttonColour2, buttonColour2,
+                        buttonColour2, buttonColour2, (0,0,0), (0, 0, 0), 128, 64, (window.width - 64, 32,), (23, 16),
+                        border=(0, 1, 0, 1), borderPressed=(0, 1, 0, 1))
+
 tileWidth = 32
 tileHeight = 32
 
@@ -209,20 +213,42 @@ class TerrainHolder(object):
 terrainMap = TerrainHolder(tileWidth, tileHeight)
 
 
+def makeListInt(list1):
+    newList = []
+
+    for element in list1:
+        newList.append(int(element))
+
+    return newList
+
 def save():
+    #Now save it in a shelve
+    saveFile = shelve.open("sections.dat")
+
+    try:
+        newSection = str(max(makeListInt(saveFile.keys())) + 1)
+
+    except ValueError:
+        newSection = "1"
+
+    saveFile[newSection] = {}
+
     for tile in objects:
         assert not tile.selected
         #First remove the offset
         tile.spr.x -= xOffset * tileWidth
 
-        #Now save it in a shelve
-        saveFile = shelve.open("sections.dat")
         try:
-            newKey = max(saveFile.keys()) + 1
+            newKey = str(max(makeListInt(saveFile[newSection].keys())) + 1)
 
         except ValueError:
             #There are currently no sections
-            newKey = 1
+            newKey = "1"
+
+        print newSection, newKey
+        saveFile[newSection][newKey] = tile.spr
+
+        print saveFile[newSection][newKey]
 
 
 def coordinatesToGrid(x, y):
@@ -243,6 +269,8 @@ def on_draw():
         button.draw()
     for button in GUITerrainButtons:
         button.draw()
+
+    SaveButton.draw()
     batch1.draw()
 
 
@@ -257,18 +285,21 @@ def on_mouse_press(x, y, button, modifiers):
                 if gridX >= 0 and gridY >= 0:
                     terrainMap.placeTile(object1, gridX, gridY)
 
+        objectSelected = False
+        for object1 in objects:
+            if object1.selected:
+                objectSelected = True
 
         for GUIbutton in GUITerrainButtons:
             if GUIbutton.update(x, y):
-                tempVar = 0
-                for object1 in objects:
-                    if object1.selected:
-                        tempVar = 1
-
-                if tempVar == 0:
+                if not objectSelected:
                     newObj = Terrain(dirtBase1, window.width / -2, window.height / -2)
                     newObj.selected = True
                     objects.append(newObj)
+
+        if SaveButton.update(x, y):
+            if not objectSelected:
+                save()
 
     if button == pyglet.window.mouse.RIGHT:
         gridX, gridY = coordinatesToGrid(x, y)
