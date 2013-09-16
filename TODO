@@ -6,3 +6,9 @@ MainMenu:
  High Scores
  Options
  Exit
+
+
+LevelEditor:
+ - Need to change tile placing to use brushes, instead of having to click the button again to get another tile.
+
+ - Fix bug which does not allow you to place tiles on the bottom row.

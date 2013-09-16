@@ -10,7 +10,7 @@ from libs.simpleLibrary import SEPARATOR
 from libs import boundingShapes
 import math
 import random
-
+import shelve
 
 class Size(object):
     def __init__(self, width, height):
@@ -233,6 +233,7 @@ class Player(object):
 
         else:
             self.invertedRocketSprite.x = self.spriteHidingPlace.x
+
             self.invertedRocketSprite.y = self.spriteHidingPlace.y
 
     def fire(self):
@@ -246,7 +247,7 @@ class Player(object):
         elif currentWeapon == "rocket":
             self.bullets.append(PlayerRocket(self.sprite.x, self.sprite.y, self.sprite.batch, self.windowSize, self))
 
-
+@PendingDeprecationWarning
 class TileMapSection(object):
     def __init__(self, data, width, windowSize, value=None):
         """
@@ -271,7 +272,8 @@ class TileMap(object):
     def __init__(self, windowBox, batch):
         #The keys for the dictionary is the column number that you want to access.
         self.data = {}
-        self.sectionChoices = []
+        sectionFile = shelve.open("sections.dat")
+        self.sectionChoices = [sectionFile.values()]
 
         self.tileSize = 128
 
@@ -281,12 +283,10 @@ class TileMap(object):
 
         self.scrollSpeed = 500
 
-
-
     def update(self, dt):
         for section in self.data.keys():
             #Test if the section has gone off the screen
-            if self.data[section]["boundingLine"].right.x < 0:
+            if self.data[section]["boundingLine"].right.x <= 0:
                 del self.data[section]
                 #Now randomly choose a new section
                 self.data[len(self.data.keys()) + 1] = random.choice(self.sectionChoices)

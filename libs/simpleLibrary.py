@@ -37,6 +37,15 @@ def niceExit():
     sys.exit()
 
 
+def makeListInt(list1):
+    newList = []
+
+    for element in list1:
+        newList.append(int(element))
+
+    return newList
+
+
 def forceFloat(message):
     """
     Force the user to enter a float.
@@ -78,7 +87,7 @@ def forceChoice(initialMessage, list1):
 
     return input1
 
-#Not the best system, but the more code the better.
+#Not the best system, but the more code the better. - Why Andrew? Use standard python library encryption
 def encrypt(number):
     return number/-3.6
 

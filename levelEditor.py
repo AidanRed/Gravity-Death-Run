@@ -3,7 +3,7 @@ import shelve
 from libs import boundingShapes
 from libs.gui import TextButton
 from pyglet.gl import *
-from libs.simpleLibrary import SEPARATOR
+from libs.simpleLibrary import SEPARATOR, makeListInt
 from libs.vectors import Vector2
 
 RESOURCEPATH = "resources" + SEPARATOR + "terrain" + SEPARATOR
@@ -44,7 +44,6 @@ class Grid(object):
         self.gridWidth = gridWidth
         self.x = x
         self.y = y
-
 
     def draw(self):
         pyglet.gl.glColor4f(1, 1, 1, 1)
@@ -210,18 +209,17 @@ class TerrainHolder(object):
     def deleteTile(self, gridX, gridY):
         self.data[gridX][gridY] = None
 
+    def getBoundingLine(self, leftSideX):
+        width = max(makeListInt(self.data.keys())) * self.tileWidth
+        return boundingShapes.BoundingLine(leftSideX * width/2, width)
+
 terrainMap = TerrainHolder(tileWidth, tileHeight)
 
 
-def makeListInt(list1):
-    newList = []
-
-    for element in list1:
-        newList.append(int(element))
-
-    return newList
-
 def save():
+    """
+    This maybe should be adapted to use the tile holder class
+    """
     #Now save it in a shelve
     saveFile = shelve.open("sections.dat")
 
@@ -246,9 +244,14 @@ def save():
             newKey = "1"
 
         print newSection, newKey
-        saveFile[newSection][newKey] = tile.spr
+        tempVar = saveFile[newSection]
+        tempVar[newKey] = tile.spr
+        saveFile.sync()
 
-        print saveFile[newSection][newKey]
+    v = saveFile[newSection]
+    v["boundingLine"] = terrainMap.getBoundingLine(0)
+
+    saveFile.close()
 
 
 def coordinatesToGrid(x, y):
@@ -282,6 +285,8 @@ def on_mouse_press(x, y, button, modifiers):
             object1.update(x, y, mousePressed=True)
             if firstSelected:
                 gridX, gridY = coordinatesToGrid(object1.spr.x, object1.spr.y)
+                print "gridX: " + str(gridX)
+                print "gridY: " + str(gridY)
                 if gridX >= 0 and gridY >= 0:
                     terrainMap.placeTile(object1, gridX, gridY)
 
