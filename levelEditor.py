@@ -97,7 +97,7 @@ class Terrain(object):
                     self.selected = True
 
             else:
-                if self.spr.y > 128:
+                if self.spr.y > 96:
                     self.selected = False
 
         if self.selected:
