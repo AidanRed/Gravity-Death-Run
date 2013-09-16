@@ -289,6 +289,10 @@ def on_mouse_press(x, y, button, modifiers):
                 print "gridY: " + str(gridY)
                 if gridX >= 0 and gridY >= 0:
                     terrainMap.placeTile(object1, gridX, gridY)
+                    newObj = Terrain(dirtBase1, window.width / -2, window.height / -2)
+                    newObj.selected = True
+                    objects.append(newObj)
+                    break
 
         objectSelected = False
         for object1 in objects:
