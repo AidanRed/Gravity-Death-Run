@@ -14,7 +14,7 @@ windowHeight = 480
 gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
 squareSize = 32
-colourChange = 1
+colourChange = 3
 #This string defines which screen is active. This will either be 'main', 'settings', or 'high-scores'
 screen = "main"
 
@@ -173,5 +173,5 @@ def on_mouse_release(x, y, button, modifiers):
 
 
 
-pyglet.clock.schedule_interval(update, 1.0 / 120.0)
+pyglet.clock.schedule_interval(update, 1.0 / 30.0)
 pyglet.app.run()
