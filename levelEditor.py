@@ -285,9 +285,9 @@ def on_mouse_press(x, y, button, modifiers):
             object1.update(x, y, mousePressed=True)
             if firstSelected:
                 gridX, gridY = coordinatesToGrid(object1.spr.x, object1.spr.y)
-                print "gridX: " + str(gridX)
-                print "gridY: " + str(gridY)
                 if gridX >= 0 and gridY >= 0:
+                    print "gridX: " + str(gridX)
+                    print "gridY: " + str(gridY)
                     terrainMap.placeTile(object1, gridX, gridY)
                     newObj = Terrain(dirtBase1, window.width / -2, window.height / -2)
                     newObj.selected = True
