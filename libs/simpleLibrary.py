@@ -33,7 +33,7 @@ def niceExit():
     """
     Wait for the user to press enter, then exit
     """
-    raw_input("\nPress enter to exit...")
+    input("\nPress enter to exit...")
     sys.exit()
 
 
@@ -56,13 +56,13 @@ def forceFloat(message):
     """
     done = False
     while not done:
-        input1 = raw_input(message)
+        input1 = input(message)
         try:
             input1 = float(input1)
             done = True
 
         except ValueError:
-            print "That was not a number!"
+            print("That was not a number!")
 
     return input1
 
@@ -80,10 +80,10 @@ def forceChoice(initialMessage, list1):
     input1 = None
 
     while input1 not in list1:
-        input1 = raw_input(initialMessage)
+        input1 = input(initialMessage)
 
         if input1 not in list1:
-            print "That is not a valid answer!\n"
+            print("That is not a valid answer!\n")
 
     return input1
 

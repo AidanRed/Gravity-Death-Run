@@ -1,4 +1,4 @@
-from vectors import Vector2
+from .vectors import Vector2
 import math
 
 

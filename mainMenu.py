@@ -13,7 +13,7 @@ windowWidth = 640
 windowHeight = 480
 gameWindow = pyglet.window.Window(windowWidth, windowHeight)
 FPS = 60
-squareSize = 32
+squareSize = 64
 colourChange = 3
 #This string defines which screen is active. This will either be 'main', 'settings', or 'high-scores'
 screen = "main"
@@ -69,8 +69,8 @@ def readSetting(filename,key):
 
 #Create the squares and set them to a grid constrained to the screen size.
 squares = []
-for i in range(windowWidth / squareSize):
-    for ii in range(windowHeight / squareSize):
+for i in range(int(windowWidth / squareSize)):
+    for ii in range(int(windowHeight / squareSize)):
         squares.append(Square(i * squareSize, ii * squareSize, squareSize, squareSize, (56, 57, 58)))
 
 #This method of setting colours for columns may be deemed inefficient and may not be used.
@@ -92,10 +92,10 @@ colours = [lblue, blue, dblue, red, pink, purple, green, dgreen, lgreen, yellow,
 
 #Determine a random colour to give to each column
 possibleColours = []
-for i in range(windowWidth / squareSize):
+for i in range(int(windowWidth / squareSize)):
     possibleColours.append(colours[random.randint(0, 10)])
 
-for i in range(windowWidth / squareSize):
+for i in range(int(windowWidth / squareSize)):
     for ii in squares:
         if i * squareSize == ii.x:
             ii.colour = possibleColours[i]
@@ -150,7 +150,7 @@ def on_mouse_press(x, y, button, modifiers):
     if button == pyglet.window.mouse.LEFT:
         if screen == "main":
             if buttonNewGame.update(x, y):
-                print "print"
+                pass
             elif buttonSettings.update(x, y):
                 screen = "settings"
         if screen == "settings":

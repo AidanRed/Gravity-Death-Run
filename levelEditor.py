@@ -47,10 +47,10 @@ class Grid(object):
 
     def draw(self):
         pyglet.gl.glColor4f(1, 1, 1, 1)
-        for i in range(2 * self.gridWidth / self.xSpacing):
+        for i in range(int(2 * self.gridWidth / self.xSpacing)):
             pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (i * self.xSpacing, self.y,
                                                                  i * self.xSpacing, self.y + self.gridHeight)))
-        for i in range(self.gridHeight / self.ySpacing):
+        for i in range(int(self.gridHeight / self.ySpacing)):
             if i > 3:
                 pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ("v2i", (self.x, i * self.ySpacing,
                                                                      2 * (self.x + self.gridWidth), i * self.ySpacing)))
@@ -183,9 +183,9 @@ xOffset = 0
 class TerrainHolder(object):
     def __init__(self, tileWidth, tileHeight):
         self.data = {}
-        for x in range(window.width / tileWidth):
+        for x in range(int(window.width / tileWidth)):
             self.data[x] = {}
-            for y in range(window.height - 128 / tileHeight):
+            for y in range(int(window.height - 128 / tileHeight)):
                 self.data[x][y] = None
 
         self.tileWidth = tileWidth
@@ -243,7 +243,7 @@ def save():
             #There are currently no sections
             newKey = "1"
 
-        print newSection, newKey
+
         tempVar = saveFile[newSection]
         tempVar[newKey] = tile.spr
         saveFile.sync()
@@ -286,8 +286,6 @@ def on_mouse_press(x, y, button, modifiers):
             if firstSelected:
                 gridX, gridY = coordinatesToGrid(object1.spr.x, object1.spr.y)
                 if gridX >= 0 and gridY >= 0:
-                    print "gridX: " + str(gridX)
-                    print "gridY: " + str(gridY)
                     terrainMap.placeTile(object1, gridX, gridY)
                     newObj = Terrain(dirtBase1, window.width / -2, window.height / -2)
                     newObj.selected = True
@@ -313,11 +311,9 @@ def on_mouse_press(x, y, button, modifiers):
     if button == pyglet.window.mouse.RIGHT:
         gridX, gridY = coordinatesToGrid(x, y)
         if not (gridX < 0 or gridY < 0):
-            print terrainMap.data[gridX][gridY]
             if terrainMap.data[gridX][gridY] is not None:
                 theTileID = terrainMap.data[gridX][gridY].id
                 terrainMap.deleteTile(gridX, gridY)
-                print terrainMap.data[gridX][gridY]
 
                 for index, value in enumerate(objects):
                     if value.id == theTileID:

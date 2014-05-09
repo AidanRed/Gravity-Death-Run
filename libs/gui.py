@@ -1,8 +1,8 @@
-from boundingShapes import Rectangle as Rect
-from boundingShapes import Circle
+from .boundingShapes import Rectangle as Rect
+from .boundingShapes import Circle
 import pyglet
-from simpleLibrary import SEPARATOR
-from vectors import Vector2
+from .simpleLibrary import SEPARATOR
+from .vectors import Vector2
 
 
 class Button(object):
@@ -80,7 +80,7 @@ class TextButton(object):
 
         self.rectangle = Rect(xy, width, height)
         self.label = pyglet.text.Label(text, font, fontSize, bold, italic, textColour, xy[0] + padding[0], xy[1] - padding[1], width - padding[0], height - padding[1],
-                                       anchor_x='center', anchor_y='center', halign='center', multiline=True)
+                                       anchor_x='center', anchor_y='center', align="center", multiline=True)
 
         self.colour = colour
         self.colour2 = colour2

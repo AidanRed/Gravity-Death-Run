@@ -181,9 +181,6 @@ class Vector2(object):
 
         angle = self.getAngle()
 
-        print angle
-        print length
-
         self.x = math.cos(angle) * length
         self.y = math.sin(angle) * length
 
@@ -419,7 +416,4 @@ def test():
 
 def testProjection(vector1=Vector2(38, 64), vector2=Vector2(50, 0)):
     theProjection = vector1.projection(vector2)
-    print theProjection
-
-    print "x: " + str(theProjection.x)
-    print "y: " + str(theProjection.y)
+    print(theProjection)
