@@ -1,10 +1,15 @@
 import pyglet
 import shelve
 from libs import boundingShapes
-from libs.gui import TextButton
+from libs import gui
 from pyglet.gl import *
-from libs.simpleLibrary import SEPARATOR, makeListInt
-from libs.vectors import Vector2
+from libs import simpleLibrary
+from libs import vectors
+
+TextButton = gui.TextButton
+SEPARATOR = simpleLibrary.SEPARATOR
+makeListInt = simpleLibrary.makeListInt
+Vector2 = vectors.Vector2
 
 RESOURCEPATH = "resources" + SEPARATOR + "terrain" + SEPARATOR
 
