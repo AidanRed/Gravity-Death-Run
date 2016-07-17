@@ -20,9 +20,9 @@ class Size(object):
 
 class Projectile(object):
     def __init__(self, x, y, image, batch, windowSize, player, speed, gravity, boundingType="rectangle", spin=0):
-        image.anchor_x = image.width / 2
-        image.anchor_y = image.height / 2
         self.sprite = pyglet.sprite.Sprite(image, x=x, y=y, batch=batch)
+        self.sprite.image.anchor_x = self.sprite.image.width / 2
+        self.sprite.image.anchor_y = self.sprite.image.height / 2
 
         self.gravity = gravity
 
@@ -110,6 +110,8 @@ class Player(object):
         self.windowSize = windowSize
 
         self.sprite = pyglet.sprite.Sprite(image, x=x, y=y, batch=batch)
+        self.sprite.image.anchor_x = self.sprite.image.width / 2
+        self.sprite.image.anchor_y = self.sprite.image.height / 2
 
         self.halfHeight = image.height / 2
         self.halfWidth = image.width / 2
@@ -139,9 +141,13 @@ class Player(object):
 
         self.rocketSprite = pyglet.sprite.Sprite(flameImage, x=self.spriteHidingPlace.x,
                                                  y=self.spriteHidingPlace.y, batch=batch)
+        self.rocketSprite.image.anchor_x = self.rocketSprite.image.width / 2
+        self.rocketSprite.image.anchor_y = self.rocketSprite.image.height / 2
 
         self.invertedRocketSprite = pyglet.sprite.Sprite(flameImage, x=self.spriteHidingPlace.x,
                                                          y=self.spriteHidingPlace.y, batch=batch)
+        self.invertedRocketSprite.image.anchor_x = self.invertedRocketSprite.image.width / 2
+        self.invertedRocketSprite.image.anchor_y = self.invertedRocketSprite.image.height / 2
         self.invertedRocketSprite.rotation = 180
 
 
