@@ -11,7 +11,6 @@ def centreImage(image):
 window = pyglet.window.Window(1300, 600)
 
 playerImage = pyglet.image.load("resources" + simpleLibrary.SEPARATOR + "playerImage.png")
-centreImage(playerImage)
 
 batch1 = pyglet.graphics.Batch()
 

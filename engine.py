@@ -136,8 +136,6 @@ class Player(object):
         self.spriteHidingPlace = Vector2(-100, -100)
 
         flameImage = pyglet.image.load("resources" + SEPARATOR + "flame1.png")
-        flameImage.anchor_x = flameImage.width / 2
-        flameImage.anchor_y = flameImage.height / 2
 
         self.rocketSprite = pyglet.sprite.Sprite(flameImage, x=self.spriteHidingPlace.x,
                                                  y=self.spriteHidingPlace.y, batch=batch)
@@ -272,7 +270,7 @@ class TileMap(object):
     def __init__(self, windowBox, batch):
         #The keys for the dictionary is the column number that you want to access.
         self.data = {}
-        sectionFile = shelve.open("sections.dat")
+        sectionFile = shelve.open("sections")
         self.sectionChoices = [sectionFile.values()]
 
         self.tileSize = 128
